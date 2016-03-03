@@ -15,6 +15,11 @@ import java.util.regex.Pattern;
 public class DumpToFiles {
     private AnimeNewsNetworkClient client;
 
+    private int skipParameter;
+    private int listParameter;
+    private AnimeNewsNetworkClient.AnimeType typeParameter;
+    private String nameParameter;
+
     public DumpToFiles(){
         client = new AnimeNewsNetworkClientImpl();
     }
@@ -51,7 +56,7 @@ public class DumpToFiles {
             System.out.println("Should skip "+skip.size()+" items");
         }
 
-        String listXml = client.queryTitlesXML(0,10,null,null);
+        String listXml = client.queryTitlesXML(getSkipParameter(),getListParameter(),getTypeParameter(),getNameParameter());
         saveToFile(list,listXml);
 
         Pattern p = Pattern.compile("<id>(\\d+)</id>");
@@ -127,6 +132,39 @@ public class DumpToFiles {
 
     public static void main(String[] args) throws IOException {
         DumpToFiles dumpUtil = new DumpToFiles();
+        dumpUtil.setListParameter(10);
         dumpUtil.dump("D:\\AnimeNewsNetwork",null);
+    }
+
+    public int getSkipParameter() {
+        return skipParameter;
+    }
+
+    public void setSkipParameter(int skipParameter) {
+        this.skipParameter = skipParameter;
+    }
+
+    public int getListParameter() {
+        return listParameter;
+    }
+
+    public void setListParameter(int listParameter) {
+        this.listParameter = listParameter;
+    }
+
+    public String getNameParameter() {
+        return nameParameter;
+    }
+
+    public void setNameParameter(String nameParameter) {
+        this.nameParameter = nameParameter;
+    }
+
+    public AnimeNewsNetworkClient.AnimeType getTypeParameter() {
+        return typeParameter;
+    }
+
+    public void setTypeParameter(AnimeNewsNetworkClient.AnimeType typeParameter) {
+        this.typeParameter = typeParameter;
     }
 }
