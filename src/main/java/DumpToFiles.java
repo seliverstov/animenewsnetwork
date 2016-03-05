@@ -21,22 +21,41 @@ public class DumpToFiles {
     private String nameParameter;
 
     public DumpToFiles(){
-        client = new AnimeNewsNetworkClientImpl();
+        client = new AnimeNewsNetworkClientImpl(false);
     }
 
-    public void dump(String rootDirPath, String skipFilePath) throws IOException {
+    public void createNewDump(String rootDirPath) throws IOException{
+        dump(rootDirPath,null,null,false);
+    }
+
+    public void dump(String rootDirPath, String loadFilePath, String skipFilePath, boolean resume) throws IOException {
         File rootDir = new File(rootDirPath);
-        if (!rootDir.exists()){
+        if (!rootDir.exists()) {
             rootDir.mkdir();
+            System.out.println("Root dir created at: "+rootDir.getAbsolutePath());
+        }else{
+            System.out.println("Root dir set to: "+rootDir.getAbsolutePath());
         }
 
-        File baseDir = new File(rootDir.getAbsolutePath(),getBaseDirName());
-        baseDir.mkdir();
-        System.out.println("Base dir created at: "+baseDir.getAbsolutePath());
+        File baseDir;
+        if(!resume) {
+            baseDir = new File(rootDir.getAbsolutePath(), getBaseDirName());
+            if (!baseDir.exists()) {
+                baseDir.mkdir();
+                System.out.println("Base dir created at: "+baseDir.getAbsolutePath());
+            }
+        }else{
+            baseDir = rootDir;
+            System.out.println("Base dir set to: "+baseDir.getAbsolutePath());
+        }
 
         File itemsDir = new File(baseDir.getAbsolutePath(),"items");
-        itemsDir.mkdir();
-        System.out.println("Items dir created at: "+itemsDir.getAbsolutePath());
+        if (!itemsDir.exists()) {
+            itemsDir.mkdir();
+            System.out.println("Items dir created at: "+itemsDir.getAbsolutePath());
+        }else{
+            System.out.println("Items dir set to: "+itemsDir.getAbsolutePath());
+        }
 
         File list = new File(baseDir.getAbsolutePath(),"list.xml");
         File success = new File(baseDir.getAbsolutePath(),"success.txt");
@@ -44,7 +63,8 @@ public class DumpToFiles {
         File woImages = new File(baseDir.getAbsolutePath(),"woImages.txt");
         File imageLoadErrors = new File(baseDir.getAbsolutePath(),"imageLoadErrors.txt");
 
-        List<Integer> skip = new ArrayList<>();
+        List<Integer> skip = new ArrayList<Integer>();
+
         if (skipFilePath!=null && new File(skipFilePath).exists()) {
             System.out.println("Read items to skip from file: "+skipFilePath);
             BufferedReader in = new BufferedReader(new FileReader(skipFilePath));
@@ -56,28 +76,39 @@ public class DumpToFiles {
             System.out.println("Should skip "+skip.size()+" items");
         }
 
-        String listXml = client.queryTitlesXML(getSkipParameter(),getListParameter(),getTypeParameter(),getNameParameter());
-        saveToFile(list,listXml);
+        List<Integer> load = new ArrayList<Integer>();
 
-        Pattern p = Pattern.compile("<id>(\\d+)</id>");
-        Matcher m = p.matcher(listXml);
+        if (loadFilePath!=null && new File(loadFilePath).exists()){
+            System.out.println("Read items to load from file: "+loadFilePath);
+            BufferedReader in = new BufferedReader(new FileReader(loadFilePath));
+            String line;
+            while((line=in.readLine())!=null){
+                load.add(Integer.parseInt(line));
+            }
+            in.close();
+            System.out.println("Should load "+load.size()+" items");
+        }else {
+            String listXml = client.queryTitlesXML(getSkipParameter(), getListParameter(), getTypeParameter(), getNameParameter());
+            saveToFile(list, listXml);
 
-        List<Integer> items = new ArrayList<>();
-        while(m.find()){
-            String id = m.group(1);
-            items.add(Integer.parseInt(id));
+            Pattern p = Pattern.compile("<id>(\\d+)</id>");
+            Matcher m = p.matcher(listXml);
+
+            while (m.find()) {
+                String id = m.group(1);
+                load.add(Integer.parseInt(id));
+            }
         }
-
-        for(int i=0; i< items.size(); i++){
-            Integer id = items.get(i);
+        for(int i=0; i< load.size(); i++){
+            Integer id = load.get(i);
             try {
-                System.out.println("Process id "+id+"(item "+i+" of "+items.size()+")");
+                System.out.println("Process id "+id+"(item "+i+" of "+load.size()+")");
                 if (skip.contains(id)){
                     System.out.println("Id "+id+" was skipped");
                 }else {
                     String detailsXML = client.queryDetailsXml(id, null);
                     File itemDir = new File(itemsDir.getAbsolutePath(),id.toString());
-                    itemDir.mkdir();
+                    if (!itemDir.exists()) itemDir.mkdir();
                     File item = new File(itemDir.getAbsolutePath(), id + ".xml");
                     saveToFile(item, detailsXML);
                     appendToFile(success, id.toString());
@@ -132,8 +163,24 @@ public class DumpToFiles {
 
     public static void main(String[] args) throws IOException {
         DumpToFiles dumpUtil = new DumpToFiles();
+
+        //dumpUtil.createNewDump("C:\\Dev\\AnimeNewsNetworkDump");
+
+
         dumpUtil.setListParameter(10);
-        dumpUtil.dump("D:\\AnimeNewsNetwork",null);
+        dumpUtil.dump(
+                "C:\\Dev\\AnimeNewsNetworkDump\\04.03.2016 21-37-58",
+                null,
+                "C:\\Dev\\AnimeNewsNetworkDump\\04.03.2016 21-37-58\\success.txt",
+                true);
+
+        /*
+        dumpUtil.dump(
+                "C:\\Dev\\AnimeNewsNetworkDump\\04.03.2016 21-37-58",
+                "C:\\Dev\\AnimeNewsNetworkDump\\04.03.2016 21-37-58\\failure.txt",
+                "C:\\Dev\\AnimeNewsNetworkDump\\04.03.2016 21-37-58\\success.txt",
+                true);
+                */
     }
 
     public int getSkipParameter() {
