@@ -20,8 +20,10 @@ public class DumpToFiles {
     private AnimeNewsNetworkClient.AnimeType typeParameter;
     private String nameParameter;
 
+    private boolean proxy;
+
     public DumpToFiles(){
-        client = new AnimeNewsNetworkClientImpl(false);
+        client = new AnimeNewsNetworkClientImpl(proxy);
     }
 
     public void createNewDump(String rootDirPath) throws IOException{
@@ -168,10 +170,11 @@ public class DumpToFiles {
 
 
         dumpUtil.setListParameter(10);
+        dumpUtil.setProxy(true);
         dumpUtil.dump(
-                "C:\\Dev\\AnimeNewsNetworkDump\\04.03.2016 21-37-58",
+                "D:\\ANN\\",
                 null,
-                "C:\\Dev\\AnimeNewsNetworkDump\\04.03.2016 21-37-58\\success.txt",
+                "D:\\ANN\\success.txt",
                 true);
 
         /*
@@ -213,5 +216,10 @@ public class DumpToFiles {
 
     public void setTypeParameter(AnimeNewsNetworkClient.AnimeType typeParameter) {
         this.typeParameter = typeParameter;
+    }
+
+    public void setProxy(boolean proxy) {
+        this.proxy = proxy;
+        client = new AnimeNewsNetworkClientImpl(proxy);
     }
 }
