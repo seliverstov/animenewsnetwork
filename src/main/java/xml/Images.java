@@ -1,9 +1,6 @@
 package xml;
 
-import org.simpleframework.xml.Attribute;
-import org.simpleframework.xml.ElementList;
-import org.simpleframework.xml.Path;
-import org.simpleframework.xml.Root;
+import org.simpleframework.xml.*;
 
 import java.util.List;
 
@@ -12,6 +9,13 @@ import java.util.List;
  */
 @Root(strict = false)
 public class Images {
+    @Attribute(name = "id", required = false)
+    @Path("manga")
+    public String mangaId;
+
+    @Attribute(name = "id", required = false)
+    @Path("anime")
+    public String animeId;
 
     @ElementList(entry = "img", required = false, inline = true, type = Img.class)
     @Path("manga/info")
@@ -35,6 +39,12 @@ public class Images {
 
     @Override
     public String toString() {
-        return ((mangaImages!=null)? mangaImages.size(): 0)+" manga images, "+((animeImages!=null)? animeImages.size(): 0)+" anime images";
+        if (mangaId!=null){
+            return "Manga " + mangaId+" has "+((mangaImages==null)?0:mangaImages.size())+" images";
+        }
+        if (animeId!=null){
+            return "Anime " + animeId+" has "+((animeImages==null)?0:animeImages.size())+" images";
+        }
+        return super.toString();
     }
 }
