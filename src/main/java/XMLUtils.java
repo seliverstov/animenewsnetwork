@@ -7,6 +7,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 import retrofit2.http.GET;
+import xml.Anime;
 import xml.Images;
 import xml.Manga;
 import xml.Titles;
@@ -62,6 +63,12 @@ public class XMLUtils {
         return  serializer.read(Manga.class, file);
     }
 
+    public static Anime parseAnime(File file) throws Exception {
+        Serializer serializer = new Persister();
+        return  serializer.read(Anime.class, file);
+    }
+
+
     public static Images parseImages(File file) throws Exception {
         Serializer serializer = new Persister();
         return  serializer.read(Images.class, file);
@@ -71,8 +78,8 @@ public class XMLUtils {
         /*Titles titles = parseTitles("http://www.animenewsnetwork.com/"); */
         Titles titles = parseTitles(new File("D:\\ANN\\list.xml"));
 
-        for(Titles.Item t: titles.items){
-            if ("manga".equals(t.type) && !"5445".equals(t.id)) {
+       for(Titles.Item t: titles.items){
+            if (("manga".equals(t.type) || "anthology".equals(t.type)) && !"5445".equals(t.id)) {
                 try {
                     String path = "D:\\ANN\\items\\" + t.id + "\\" + t.id + ".xml";
                     Manga manga = parseManga(new File(path));
@@ -80,7 +87,23 @@ public class XMLUtils {
                     Images images = parseImages(new File(path));
                     System.out.println(images);
                 }catch (Exception e){
-                    System.out.println(t.id+" - error: ");
+                    System.out.println(t.id+","+t.type+" - error: ");
+                    e.printStackTrace();
+                    return;
+                }
+            }
+        }
+
+        for(Titles.Item t: titles.items){
+            if (!"manga".equals(t.type) && !"anthology".equals(t.type) && !"16857".equals(t.id)) {
+                try {
+                    String path = "D:\\ANN\\items\\" + t.id + "\\" + t.id + ".xml";
+                    Anime anime = parseAnime(new File(path));
+                    System.out.println(anime);
+                    Images images = parseImages(new File(path));
+                    System.out.println(images);
+                }catch (Exception e){
+                    System.out.println(t.id+","+t.type+" - error: ");
                     e.printStackTrace();
                     return;
                 }

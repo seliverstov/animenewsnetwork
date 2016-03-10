@@ -15,7 +15,11 @@ public class Images {
 
     @ElementList(entry = "img", required = false, inline = true, type = Img.class)
     @Path("manga/info")
-    public List<Img> images;
+    public List<Img> mangaImages;
+
+    @ElementList(entry = "img", required = false, inline = true, type = Img.class)
+    @Path("anime/info")
+    public List<Img> animeImages;
 
     @Root
     public static class Img {
@@ -31,6 +35,6 @@ public class Images {
 
     @Override
     public String toString() {
-        return ((images!=null)? images.size(): 0)+" images";
+        return ((mangaImages!=null)? mangaImages.size(): 0)+" manga images, "+((animeImages!=null)? animeImages.size(): 0)+" anime images";
     }
 }
