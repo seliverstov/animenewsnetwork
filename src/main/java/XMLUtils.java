@@ -1,10 +1,14 @@
 import okhttp3.OkHttpClient;
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
 import org.xml.sax.SAXException;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 import retrofit2.http.GET;
+import xml.Images;
+import xml.Manga;
 import xml.Titles;
 
 import javax.xml.XMLConstants;
@@ -14,6 +18,7 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 
@@ -46,12 +51,43 @@ public class XMLUtils {
         return response.body();
     }
 
-    public static void main(String[] args) throws IOException {
-        Titles titles = parseTitles("http://www.animenewsnetwork.com/");
-        System.out.println(titles);
-        for(Titles.Item item: titles.items){
-            System.out.println(item);
+    public static Titles parseTitles(File file) throws Exception {
+        Serializer serializer = new Persister();
+        return serializer.read(Titles.class, file);
+
+    }
+
+    public static Manga parseManga(File file) throws Exception {
+        Serializer serializer = new Persister();
+        return  serializer.read(Manga.class, file);
+    }
+
+    public static Images parseImages(File file) throws Exception {
+        Serializer serializer = new Persister();
+        return  serializer.read(Images.class, file);
+    }
+
+    public static void main(String[] args) throws Exception {
+        /*Titles titles = parseTitles("http://www.animenewsnetwork.com/"); */
+        Titles titles = parseTitles(new File("D:\\ANN\\list.xml"));
+
+        for(Titles.Item t: titles.items){
+            if ("manga".equals(t.type) && !"5445".equals(t.id)) {
+                try {
+                    String path = "D:\\ANN\\items\\" + t.id + "\\" + t.id + ".xml";
+                    Manga manga = parseManga(new File(path));
+                    System.out.println(manga);
+                    Images images = parseImages(new File(path));
+                    System.out.println(images);
+                }catch (Exception e){
+                    System.out.println(t.id+" - error: ");
+                    e.printStackTrace();
+                    return;
+                }
+            }
         }
+
+
     }
 
     public interface XMLService{
