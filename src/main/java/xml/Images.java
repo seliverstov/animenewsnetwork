@@ -2,6 +2,7 @@ package xml;
 
 import org.simpleframework.xml.*;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public class Images {
 
     @ElementList(entry = "img", required = false, inline = true, type = Img.class)
     @Path("anime/info")
-    public List<Img> animeImages;
+    public Collection<Img> animeImages;
 
     @Root
     public static class Img {

@@ -1,5 +1,8 @@
 package xml;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import org.simpleframework.xml.*;
 
 import java.util.List;
@@ -7,6 +10,7 @@ import java.util.List;
 /**
  * Created by a.g.seliverstov on 09.03.2016.
  */
+
 @Root(name = "report")
 public class Titles {
     @Attribute(required = false)
@@ -35,17 +39,21 @@ public class Titles {
         return items.size()+" items, skipped " + skipped + ", listed " + listed + ", type = " + type + ", name = " + name + ", search = " + search;
     }
 
+    @DatabaseTable(tableName = "titles")
     @Root(name = "item")
     public static class Item{
+        @DatabaseField(id = true)
         @Element
         public String id;
 
         @Element
         public String gid;
 
+        @DatabaseField
         @Element
         public String type;
 
+        @DatabaseField
         @Element
         public String name;
 

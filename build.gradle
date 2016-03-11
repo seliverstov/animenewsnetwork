@@ -14,11 +14,18 @@ dependencies {
     compile 'org.xerial:sqlite-jdbc:3.8.11.2'
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
     compile 'com.squareup.retrofit2:converter-simplexml:2.0.0-beta4'
+    compile 'com.j256.ormlite:ormlite-jdbc:4.48'
     testCompile 'junit:junit:4.11'
 }
 
 task runXMLUtils(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     main = "XMLUtils"
+}
+
+task runORMUtils(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "ORMUtils"
+    jvmArgs ["-Xmx512M"]
 }
 

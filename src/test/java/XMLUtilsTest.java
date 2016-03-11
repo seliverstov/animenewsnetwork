@@ -4,6 +4,7 @@ import xml.Images;
 import xml.Titles;
 
 import java.io.File;
+import java.util.Iterator;
 
 import static org.junit.Assert.*;
 
@@ -44,7 +45,7 @@ public class XMLUtilsTest {
                     if (!"manga".equals(t.type) && !"anthology".equals(t.type)) assertEquals(t.id, images.animeId);
                     if ("1".equals(t.id)) {
                         assertEquals(1,images.animeImages.size());
-                        Images.Img img = images.animeImages.get(0);
+                        Images.Img img = images.animeImages.iterator().next();
                         assertNotNull(img);
                         assertEquals("http://cdn.animenewsnetwork.com/thumbnails/fit200x200/encyc/A1-51.jpg", img.src);
                         assertEquals("200", img.width);
@@ -53,12 +54,13 @@ public class XMLUtilsTest {
                     }
                     if ("3".equals(t.id)) {
                         assertEquals(2,images.animeImages.size());
-                        Images.Img img = images.animeImages.get(0);
+                        Iterator<Images.Img> it = images.animeImages.iterator();
+                        Images.Img img = it.next();
                         assertNotNull(img);
                         assertEquals("http://cdn.animenewsnetwork.com/thumbnails/fit200x200/encyc/A3-4.jpg", img.src);
                         assertEquals("200", img.width);
                         assertEquals("151", img.height);
-                        img = images.animeImages.get(1);
+                        img = it.next();
                         assertNotNull(img);
                         assertEquals("http://cdn.animenewsnetwork.com/thumbnails/max500x600/encyc/A3-4.jpg", img.src);
                         assertEquals("260", img.width);
@@ -66,17 +68,18 @@ public class XMLUtilsTest {
                     }
                     if ("18134".equals(t.id)) {
                         assertEquals(3,images.mangaImages.size());
-                        Images.Img img = images.mangaImages.get(0);
+                        Iterator<Images.Img> it = images.mangaImages.iterator();
+                        Images.Img img = it.next();
                         assertNotNull(img);
                         assertEquals("http://cdn.animenewsnetwork.com/thumbnails/fit200x200/encyc/A18134-2480875565.1457413927.jpg", img.src);
                         assertEquals("140", img.width);
                         assertEquals("200", img.height);
-                        img = images.mangaImages.get(1);
+                        img = it.next();
                         assertNotNull(img);
                         assertEquals("http://cdn.animenewsnetwork.com/thumbnails/max500x600/encyc/A18134-2480875565.1457413927.jpg", img.src);
                         assertEquals("421", img.width);
                         assertEquals("600", img.height);
-                        img = images.mangaImages.get(2);
+                        img = it.next();
                         assertNotNull(img);
                         assertEquals("http://cdn.animenewsnetwork.com/images/encyc/A18134-2480875565.1457413927.jpg", img.src);
                         assertEquals("561", img.width);
