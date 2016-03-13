@@ -19,10 +19,10 @@ public class Manga {
 
     @DatabaseField
     @Attribute(name = "id")
-    public String annId;
+    public int annId;
 
     @Attribute
-    public String gid;
+    public long gid;
 
     @DatabaseField
     @Attribute
@@ -41,17 +41,17 @@ public class Manga {
     @DatabaseField
     @Attribute(name = "nb_votes", required = false)
     @Path("ratings")
-    public String nbVotesRating;
+    public int votes;
 
     @DatabaseField
     @Attribute(name = "weighted_score", required = false)
     @Path("ratings")
-    public String weightedScoreRating;
+    public float weightedScore;
 
     @DatabaseField
     @Attribute(name = "bayesian_score", required = false)
     @Path("ratings")
-    public String bayesianScoreRating;
+    public float bayesianScore;
 
     @ForeignCollectionField
     @ElementListUnion({
@@ -88,7 +88,7 @@ public class Manga {
 
     @Override
     public String toString() {
-        return id+", "+type+", "+name;
+        return annId+", "+type+", "+name;
     }
 
     @DatabaseTable(tableName = "related")
@@ -98,11 +98,11 @@ public class Manga {
         public int id;
 
         @DatabaseField(foreign = true, foreignAutoCreate = true)
-        protected Manga manga;
+        public Manga manga;
 
         @DatabaseField
         @Attribute(name = "id")
-        public String annId;
+        public int annId;
 
         @DatabaseField
         @Attribute
@@ -117,11 +117,10 @@ public class Manga {
         public int id;
 
         @DatabaseField(foreign = true, foreignAutoCreate = true)
-        protected Manga manga;
+        public Manga manga;
 
-        @DatabaseField
         @Attribute(required = false)
-        public String gid;
+        public long gid;
 
         @DatabaseField
         @Attribute
@@ -145,11 +144,11 @@ public class Manga {
 
         @DatabaseField
         @Attribute(required = false)
-        public String width;
+        public int width;
 
         @DatabaseField
         @Attribute(required = false)
-        public String height;
+        public int height;
 
     }
 
@@ -160,11 +159,10 @@ public class Manga {
         public int id;
 
         @DatabaseField(foreign = true, foreignAutoCreate = true)
-        protected Manga manga;
+        public Manga manga;
 
-        @DatabaseField
         @Attribute
-        public String gid;
+        public long gid;
 
         @DatabaseField
         @Element
@@ -178,7 +176,7 @@ public class Manga {
         @DatabaseField
         @Attribute(name="id")
         @Path("person")
-        public String personId;
+        public int personId;
     }
 
     @DatabaseTable(tableName = "news")
@@ -188,7 +186,7 @@ public class Manga {
         public int id;
 
         @DatabaseField(foreign = true, foreignAutoCreate = true)
-        protected Manga manga;
+        public Manga manga;
 
         @DatabaseField
         @Attribute(name = "datetime")
@@ -210,7 +208,7 @@ public class Manga {
         public int id;
 
         @DatabaseField(foreign = true, foreignAutoCreate = true)
-        protected Manga manga;
+        public Manga manga;
 
         @DatabaseField
         @Attribute(name = "date")
@@ -232,7 +230,7 @@ public class Manga {
         public int id;
 
         @DatabaseField(foreign = true, foreignAutoCreate = true)
-        protected Manga manga;
+        public Manga manga;
 
         @DatabaseField
         @Attribute(name = "href")
@@ -250,11 +248,10 @@ public class Manga {
         public int id;
 
         @DatabaseField(foreign = true, foreignAutoCreate = true)
-        protected Manga manga;
+        public Manga manga;
 
-        @DatabaseField
         @Attribute
-        public String gid;
+        public long gid;
 
         @DatabaseField
         @Element
@@ -268,6 +265,6 @@ public class Manga {
         @DatabaseField
         @Attribute(name="id")
         @Path("company")
-        public String companyId;
+        public int companyId;
     }
 }

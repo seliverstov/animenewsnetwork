@@ -10,7 +10,9 @@ import retrofit2.http.GET;
 import xml.*;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 
@@ -38,17 +40,17 @@ public class XMLUtils {
 
     public static Titles parseTitles(File file) throws Exception {
         Serializer serializer = new Persister();
-        return serializer.read(Titles.class, file);
+        return serializer.read(Titles.class, new InputStreamReader(new FileInputStream(file),"UTF-8"));
     }
 
     public static Images parseImages(File file) throws Exception {
         Serializer serializer = new Persister();
-        return  serializer.read(Images.class, file);
+        return  serializer.read(Images.class, new InputStreamReader(new FileInputStream(file),"UTF-8"));
     }
 
     public static ANN parseANN(File file) throws  Exception {
         Serializer serializer = new Persister();
-        return  serializer.read(ANN.class, file);
+        return  serializer.read(ANN.class, new InputStreamReader(new FileInputStream(file),"UTF-8"));
     }
 
     public static void main(String[] args) throws Exception {

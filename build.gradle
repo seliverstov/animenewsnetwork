@@ -29,3 +29,8 @@ task runORMUtils(type: JavaExec) {
     jvmArgs ["-Xmx512M"]
 }
 
+task runDumpToFiles(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "DumpToFiles"
+}
+

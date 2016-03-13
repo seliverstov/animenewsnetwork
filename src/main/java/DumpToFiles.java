@@ -169,12 +169,12 @@ public class DumpToFiles {
         //dumpUtil.createNewDump("C:\\Dev\\AnimeNewsNetworkDump");
 
 
-        dumpUtil.setListParameter(10);
-        dumpUtil.setProxy(true);
+        //dumpUtil.setListParameter(10);
+        dumpUtil.setProxy(false);
         dumpUtil.dump(
-                "D:\\ANN\\",
+                "C:\\Dev\\AnimeNewsNetworkDump\\04.03.2016 21-37-58\\",
                 null,
-                "D:\\ANN\\success.txt",
+                "C:\\Dev\\AnimeNewsNetworkDump\\04.03.2016 21-37-58\\success.txt",
                 true);
 
         /*

@@ -12,15 +12,15 @@ import static org.junit.Assert.*;
  * Created by a.g.seliverstov on 10.03.2016.
  */
 public class XMLUtilsTest {
-    public static final String TITLES_FILE_PATH = "D:\\ANN\\list.xml";
-    public static final String ITEM_FILE_PATH_TEMPLATE = "D:\\ANN\\items\\%s\\%s.xml";
+    public static final String TITLES_FILE_PATH = "C:\\Dev\\AnimeNewsNetworkDump\\04.03.2016 21-37-58\\list.xml";
+    public static final String ITEM_FILE_PATH_TEMPLATE = "C:\\Dev\\AnimeNewsNetworkDump\\04.03.2016 21-37-58\\items\\%s\\%s.xml";
 
     @Test
     public void testParseTitles() throws Exception {
         Titles t = XMLUtils.parseTitles(new File(TITLES_FILE_PATH));
         assertNotNull(t);
         assertNotNull(t.items);
-        assertEquals(17018,t.items.size());
+        assertEquals(17024,t.items.size());
         Titles.Item i = t.items.get(t.items.size()-1);
         assertNotNull(i);
         assertEquals("1",i.id);
@@ -37,6 +37,7 @@ public class XMLUtilsTest {
         for(Titles.Item t: titles.items){
             if (!"5445".equals(t.id) && !"16857".equals(t.id)) {
                 try {
+                    System.out.println("Parse images for "+t);
                     String path = String.format(ITEM_FILE_PATH_TEMPLATE,t.id,t.id);
                     Images images = XMLUtils.parseImages(new File(path));
                     assertNotNull(images);
@@ -101,6 +102,7 @@ public class XMLUtilsTest {
         for(Titles.Item t: titles.items){
             if (!"5445".equals(t.id) && !"16857".equals(t.id)) {
                 try {
+                    System.out.println("Parse ANN for "+t);
                     String path = String.format(ITEM_FILE_PATH_TEMPLATE,t.id,t.id);
                     ANN ann = XMLUtils.parseANN(new File(path));
                     assertNotNull(ann);

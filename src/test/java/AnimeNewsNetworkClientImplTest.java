@@ -11,7 +11,7 @@ public class AnimeNewsNetworkClientImplTest {
 
     @Before
     public void setUp(){
-        client = new AnimeNewsNetworkClientImpl();
+        client = new AnimeNewsNetworkClientImpl(false);
     }
 
     @Test
