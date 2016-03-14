@@ -11,7 +11,7 @@ public class AnimeNewsNetworkClientImplTest {
 
     @Before
     public void setUp(){
-        client = new AnimeNewsNetworkClientImpl(false);
+        client = (System.getenv("ANN_PROXY")!=null)?new AnimeNewsNetworkClientImpl(true):new AnimeNewsNetworkClientImpl(false);
     }
 
     @Test
