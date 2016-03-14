@@ -15,63 +15,91 @@ import java.util.Collection;
  * Created by a.g.seliverstov on 11.03.2016.
  */
 public class ORMUtils {
+    public static void createTables(ConnectionSource connectionSource) throws SQLException {
+        TableUtils.createTableIfNotExists(connectionSource, Manga.class);
+        TableUtils.createTableIfNotExists(connectionSource, Manga.Credit.class);
+        TableUtils.createTableIfNotExists(connectionSource, Manga.Info.class);
+        TableUtils.createTableIfNotExists(connectionSource, Manga.News.class);
+        TableUtils.createTableIfNotExists(connectionSource, Manga.Related.class);
+        TableUtils.createTableIfNotExists(connectionSource, Manga.Release.class);
+        TableUtils.createTableIfNotExists(connectionSource, Manga.Review.class);
+        TableUtils.createTableIfNotExists(connectionSource, Manga.Staff.class);
+        TableUtils.createTableIfNotExists(connectionSource, Anime.Episode.class);
+        TableUtils.createTableIfNotExists(connectionSource, Anime.Episode.Title.class);
+        TableUtils.createTableIfNotExists(connectionSource, Anime.Cast.class);
+        TableUtils.createTableIfNotExists(connectionSource, Images.Img.class);
+    }
+
+    public static void fillDatabase(ConnectionSource connectionSource, String basePath, boolean loadImages) throws Exception {
+        if (!basePath.endsWith("\\")&&!basePath.endsWith("/")){
+            basePath+="/";
+        }
+        final String TITLES_FILE_PATH = basePath+"list.xml";
+        final String ITEM_FILE_PATH_TEMPLATE = basePath+"items/%s/%s.xml";
+
+        Titles titles = XMLUtils.parseTitles(new File(TITLES_FILE_PATH));
+
+        int maxAnnId = -1;
+
+        Dao<Manga, Integer> mangaDao = DaoManager.createDao(connectionSource, Manga.class);
+        Manga manga = mangaDao.queryForFirst(mangaDao.queryBuilder().orderBy("annId",false).prepare());
+        if (manga!=null) maxAnnId = manga.annId;
+
+        System.out.println("Set max ANN id to "+maxAnnId);
+
+        for (Titles.Item t : titles.items) {
+           if (new Integer(t.id) > maxAnnId) {
+               try {
+                   String path = String.format(ITEM_FILE_PATH_TEMPLATE, t.id, t.id);
+                   ANN ann = XMLUtils.parseANN(new File(path));
+                   Images images = XMLUtils.parseImages(new File(path));
+                   System.out.println(ann);
+                   if (ann.anime != null) {
+                       saveManga(ann.anime, connectionSource);
+                   }
+                   if (ann.manga != null) {
+                       saveManga(ann.manga, connectionSource);
+                   }
+               } catch (Exception e) {
+                   System.out.println(t.id + "," + t.type + " - error: ");
+                   e.printStackTrace();
+               }
+           }
+        }
+
+        if (loadImages) {
+            for (Titles.Item t : titles.items) {
+                if (new Integer(t.id) > maxAnnId) {
+                    try {
+                        String path = String.format(ITEM_FILE_PATH_TEMPLATE, t.id, t.id);
+                        Images images = XMLUtils.parseImages(new File(path));
+                        System.out.println(images);
+                        saveImages(images, connectionSource);
+                    } catch (Exception e) {
+                        System.out.println(t.id + "," + t.type + " - error: ");
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
 
 
     public static void main(String[] args) throws Exception {
-        if (args.length!=2) {
-            System.out.println("Wrong number of arguments! Should be 2: xmlDumpBaseDir, databaseUrl");
+        final String ANN_HOME = System.getenv("ANN_HOME");
+        final String ANN_DB = System.getenv("ANN_DB");
+
+        if (ANN_HOME==null || ANN_DB==null){
+            throw new RuntimeException("Set up ANN_HOME and/or ANN_DB environment variable correctly!");
         }
 
-        final String TITLES_FILE_PATH = args[0]+"\\list.xml";
-        final String ITEM_FILE_PATH_TEMPLATE = args[0]+"\\items\\%s\\%s.xml";
-        final String DATABASE_CONNECTION_URL = args[1];
+        ConnectionSource connectionSource = new JdbcConnectionSource(ANN_DB);
 
-        Titles titles = XMLUtils.parseTitles(new File(TITLES_FILE_PATH));
-        ConnectionSource connectionSource = new JdbcConnectionSource(DATABASE_CONNECTION_URL);
+        createTables(connectionSource);
 
+        fillDatabase(connectionSource,ANN_HOME,true);
 
-        /*TableUtils.createTable(connectionSource, Manga.class);
-        TableUtils.createTable(connectionSource, Manga.Credit.class);
-        TableUtils.createTable(connectionSource, Manga.Info.class);
-        TableUtils.createTable(connectionSource, Manga.News.class);
-        TableUtils.createTable(connectionSource, Manga.Related.class);
-        TableUtils.createTable(connectionSource, Manga.Release.class);
-        TableUtils.createTable(connectionSource, Manga.Review.class);
-        TableUtils.createTable(connectionSource, Manga.Staff.class);
-        TableUtils.createTable(connectionSource, Anime.Episode.class);
-        TableUtils.createTable(connectionSource, Anime.Episode.Title.class);
-        TableUtils.createTable(connectionSource, Anime.Cast.class);*/
-        TableUtils.createTable(connectionSource, Images.Img.class);
-
-       /* for(Titles.Item t: titles.items) {
-            try {
-                String path = String.format(ITEM_FILE_PATH_TEMPLATE,t.id,t.id);
-                ANN ann = XMLUtils.parseANN(new File(path));
-                Images images = XMLUtils.parseImages(new File(path));
-                System.out.println(ann);
-                if (ann.anime!=null){
-                    saveManga(ann.anime, connectionSource);
-                }
-                if (ann.manga!=null){
-                    saveManga(ann.manga, connectionSource);
-                }
-            }catch (Exception e){
-                System.out.println(t.id+","+t.type+" - error: ");
-                e.printStackTrace();
-            }
-        }*/
-        for(Titles.Item t: titles.items) {
-            try {
-                String path = String.format(ITEM_FILE_PATH_TEMPLATE,t.id,t.id);
-                Images images = XMLUtils.parseImages(new File(path));
-                System.out.println(images);
-                saveImages(images, connectionSource);
-            }catch (Exception e){
-                System.out.println(t.id+","+t.type+" - error: ");
-                e.printStackTrace();
-            }
-
-        }
         connectionSource.close();
     }
 

@@ -21,7 +21,7 @@ public class XMLUtilsTest {
     public void setUp(){
         String baseDir = System.getenv("ANN_HOME");
         if (baseDir==null) throw new RuntimeException("%ANN_HOME% environment variable must be setup correctly!");
-        if (!baseDir.endsWith("\\")||!baseDir.endsWith("/"))
+        if (!baseDir.endsWith("\\") && !baseDir.endsWith("/"))
             baseDir+="/";
         TITLES_FILE_PATH = baseDir+"list.xml";
         ITEM_FILE_PATH_TEMPLATE = baseDir+"items/%s/%s.xml";
@@ -52,7 +52,7 @@ public class XMLUtilsTest {
                 String path = String.format(ITEM_FILE_PATH_TEMPLATE,t.id,t.id);
                 Images images = XMLUtils.parseImages(new File(path));
                 assertNotNull(images);
-                assertTrue(images.animeId!=null || images.mangaId!=null);
+                assertTrue(images.animeId!=0 || images.mangaId!=0);
                 if ("manga".equals(t.type)) assertEquals(t.id, images.mangaId);
                 if (!"manga".equals(t.type) && !"anthology".equals(t.type)) assertEquals(t.id, images.animeId);
                 if ("1".equals(t.id)) {
