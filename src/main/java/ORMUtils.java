@@ -31,7 +31,7 @@ public class ORMUtils {
 
 //        TableUtils.createTable(connectionSource, Titles.Item.class);
 
-        TableUtils.createTable(connectionSource, Manga.class);
+        /*TableUtils.createTable(connectionSource, Manga.class);
         TableUtils.createTable(connectionSource, Manga.Credit.class);
         TableUtils.createTable(connectionSource, Manga.Info.class);
         TableUtils.createTable(connectionSource, Manga.News.class);
@@ -41,10 +41,10 @@ public class ORMUtils {
         TableUtils.createTable(connectionSource, Manga.Staff.class);
         TableUtils.createTable(connectionSource, Anime.Episode.class);
         TableUtils.createTable(connectionSource, Anime.Episode.Title.class);
-        TableUtils.createTable(connectionSource, Anime.Cast.class);
+        TableUtils.createTable(connectionSource, Anime.Cast.class);*/
 
         for(Titles.Item t: titles.items) {
-            if (!"5445".equals(t.id) && !"16857".equals(t.id)) {
+            if ("5445".equals(t.id) || "16857".equals(t.id)) {
                 try {
                     String path = String.format(ITEM_FILE_PATH_TEMPLATE,t.id,t.id);
                     ANN ann = XMLUtils.parseANN(new File(path));

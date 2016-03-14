@@ -144,9 +144,16 @@ public class DumpToFiles {
 
     }
 
+    protected String stripNonValidXMLCharacters(String xml){
+        if (xml!=null)
+            return xml.replaceAll("[\\u0000-\\u0008\\u000B\\u000C\\u000E-\\u001F\\u007F-\\u0084\\u0086-\\u009F\\uD800-\\uDFFF\\uFDD0-\\uFDEF\\uFFFE\\uFFFF]","");
+        else
+            return null;
+    }
+
     protected void saveToFile(File file, String content) throws IOException {
         BufferedWriter out = new BufferedWriter(new FileWriter(file));
-        out.write(content);
+        out.write(stripNonValidXMLCharacters(content));
         out.close();
         System.out.println("File created: "+file.getName());
     }
@@ -166,24 +173,17 @@ public class DumpToFiles {
     public static void main(String[] args) throws IOException {
         DumpToFiles dumpUtil = new DumpToFiles();
 
-        //dumpUtil.createNewDump("C:\\Dev\\AnimeNewsNetworkDump");
-
-
         //dumpUtil.setListParameter(10);
-        dumpUtil.setProxy(false);
+        String baseDir = System.getenv("ANN_HOME");
+        if (!baseDir.endsWith("\\")||!baseDir.endsWith("/"))
+            baseDir+="/";
+        dumpUtil.setProxy(true);
         dumpUtil.dump(
-                "C:\\Dev\\AnimeNewsNetworkDump\\04.03.2016 21-37-58\\",
+                baseDir,
                 null,
-                "C:\\Dev\\AnimeNewsNetworkDump\\04.03.2016 21-37-58\\success.txt",
+                baseDir+"success.txt",
                 true);
 
-        /*
-        dumpUtil.dump(
-                "C:\\Dev\\AnimeNewsNetworkDump\\04.03.2016 21-37-58",
-                "C:\\Dev\\AnimeNewsNetworkDump\\04.03.2016 21-37-58\\failure.txt",
-                "C:\\Dev\\AnimeNewsNetworkDump\\04.03.2016 21-37-58\\success.txt",
-                true);
-                */
     }
 
     public int getSkipParameter() {
