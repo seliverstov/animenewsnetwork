@@ -15,11 +15,17 @@ import java.sql.SQLException;
  * Created by a.g.seliverstov on 11.03.2016.
  */
 public class ORMUtils {
-    public static final String TITLES_FILE_PATH = "C:\\Dev\\AnimeNewsNetworkDump\\04.03.2016 21-37-58\\list.xml";
-    public static final String ITEM_FILE_PATH_TEMPLATE = "C:\\Dev\\AnimeNewsNetworkDump\\04.03.2016 21-37-58\\items\\%s\\%s.xml";
-    public static final String DATABASE_CONNECTION_URL = "jdbc:sqlite:C:/Dev/AnimeNewsNetworkDump/04.03.2016 21-37-58/all.s3db";
+
 
     public static void main(String[] args) throws Exception {
+        if (args.length!=2) {
+            System.out.println("Wrong number of arguments! Should be 2: xmlDumpBaseDir, databaseUrl");
+        }
+
+        final String TITLES_FILE_PATH = args[0]+"\\list.xml";
+        final String ITEM_FILE_PATH_TEMPLATE = args[0]+"\\items\\%s\\%s.xml";
+        final String DATABASE_CONNECTION_URL = args[1];
+
         Titles titles = XMLUtils.parseTitles(new File(TITLES_FILE_PATH));
         ConnectionSource connectionSource = new JdbcConnectionSource(DATABASE_CONNECTION_URL);
 

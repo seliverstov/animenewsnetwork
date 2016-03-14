@@ -26,7 +26,7 @@ task runXMLUtils(type: JavaExec) {
 task runORMUtils(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     main = "ORMUtils"
-    jvmArgs ["-Xmx512M"]
+    args = ["D:\\ANN","jdbc:sqlite:D:/ANN/all.s3db"]
 }
 
 task runDumpToFiles(type: JavaExec) {
