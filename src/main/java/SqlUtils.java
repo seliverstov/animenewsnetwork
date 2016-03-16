@@ -1,19 +1,11 @@
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.stmt.PreparedQuery;
-import com.j256.ormlite.stmt.QueryBuilder;
-import db.Contract;
+
 import db.ImageDao;
+import db.MangaDao;
 import xml.*;
 
 import java.io.*;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import static db.Contract.*;
-
 
 
 /**
@@ -57,7 +49,32 @@ public class SQLUtils {
         Titles titles = XMLUtils.parseTitles(new File(TITLES_FILE_PATH));
 
         int maxAnnId = -1;
-        ImageDao imageDao = new ImageDao(connection);
+
+        MangaDao mangaDao = new MangaDao(connection);
+
+        mangaDao.dropTabales();
+        mangaDao.createTables();
+
+        for (Titles.Item t : titles.items) {
+            if (new Integer(t.id) > maxAnnId) {
+                try {
+                    String path = String.format(ITEM_FILE_PATH_TEMPLATE, t.id, t.id);
+                    ANN ann = XMLUtils.parseANN(new File(path));
+                    System.out.println(ann);
+                    if (ann.anime != null) {
+                        mangaDao.create(ann.anime);
+                    }
+                    if (ann.manga != null) {
+                        mangaDao.create(ann.manga);
+                    }
+                } catch (Exception e) {
+                    System.out.println(t.id + "," + t.type + " - error: ");
+                    throw e;
+                }
+            }
+        }
+
+/*        ImageDao imageDao = new ImageDao(connection);
         imageDao.createTables();
 
         for (Titles.Item t : titles.items) {
@@ -88,7 +105,7 @@ public class SQLUtils {
 
                 }
             }
-        }
+        }*/
 
     }
 }
