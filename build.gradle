@@ -18,6 +18,11 @@ dependencies {
     testCompile 'junit:junit:4.11'
 }
 
+task runDumpToFiles(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "DumpToFiles"
+}
+
 task runXMLUtils(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     main = "XMLUtils"
@@ -26,11 +31,12 @@ task runXMLUtils(type: JavaExec) {
 task runORMUtils(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     main = "ORMUtils"
-    args = ["D:\\ANN","jdbc:sqlite:D:/ANN/all.s3db"]
 }
 
-task runDumpToFiles(type: JavaExec) {
-    classpath sourceSets.main.runtimeClasspath
-    main = "DumpToFiles"
+task runSQLUtils(type: JavaExec) {
+    classpath  sourceSets.main.runtimeClasspath
+    main = "SQLUtils"
 }
+
+
 
