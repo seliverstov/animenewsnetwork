@@ -51,21 +51,38 @@ public class SQLUtils {
         int maxAnnId = -1;
 
         MangaDao mangaDao = new MangaDao(connection);
+        ImageDao imageDao = new ImageDao(connection);
 
         mangaDao.dropTabales();
         mangaDao.createTables();
+
+        imageDao.dropTables();
+        imageDao.createTables();
 
         for (Titles.Item t : titles.items) {
             if (new Integer(t.id) > maxAnnId) {
                 try {
                     String path = String.format(ITEM_FILE_PATH_TEMPLATE, t.id, t.id);
                     ANN ann = XMLUtils.parseANN(new File(path));
+                    Images images = XMLUtils.parseImages(new File(path));
                     System.out.println(ann);
+                    Collection<Image> imagesCollection = null;
+                    Manga manga = null;
                     if (ann.anime != null) {
                         mangaDao.create(ann.anime);
+                        manga=ann.anime;
+                        imagesCollection = images.animeImages;
                     }
                     if (ann.manga != null) {
                         mangaDao.create(ann.manga);
+                        manga=ann.manga;
+                        imagesCollection = images.mangaImages;
+                    }
+                    if (manga!=null && imagesCollection!=null){
+                        for(Image i:imagesCollection){
+                            i.manga = manga;
+                            imageDao.create(i);
+                        }
                     }
                 } catch (Exception e) {
                     System.out.println(t.id + "," + t.type + " - error: ");
@@ -73,39 +90,5 @@ public class SQLUtils {
                 }
             }
         }
-
-/*        ImageDao imageDao = new ImageDao(connection);
-        imageDao.createTables();
-
-        for (Titles.Item t : titles.items) {
-            if (new Integer(t.id) > maxAnnId) {
-                try {
-                    String path = String.format(ITEM_FILE_PATH_TEMPLATE, t.id, t.id);
-                    Images images = XMLUtils.parseImages(new File(path));
-                    System.out.println(images);
-                    Integer annId = null;
-                    Collection<Image> imagesCollection = null;
-                    if (images.animeId!=0) {
-                        annId=images.animeId;
-                        imagesCollection = images.animeImages;
-                    }else if (images.mangaId!=0) {
-                        annId=images.mangaId;
-                        imagesCollection = images.mangaImages;
-                    }
-                    if (annId!=null && imagesCollection!=null){
-                        for(Image i:imagesCollection){
-                            i.manga = new Manga();
-                            i.manga.id = new Integer(t.id);
-                            imageDao.create(i);
-                        }
-                    }
-                } catch (Exception e) {
-                    System.out.println(t.id + "," + t.type + " - error: ");
-                    throw e;
-
-                }
-            }
-        }*/
-
     }
 }

@@ -45,7 +45,7 @@ public class ImageDao {
             Contract.ImageEntry.FILE_COLUMN + " VARCHAR NOT NULL, " +
             Contract.ImageEntry.WIDTH_COLUMN + " INTEGER NOT NULL, " +
             Contract.ImageEntry.HEIGHT_COLUMN + " INTEGER NOT NULL " +
-            ")";
+            ");";
 
 
     private static final String SQL_CREATE_IMAGE_TYPES_TABLE  = "CREATE TABLE IF NOT EXISTS "+ Contract.ImageTypeEntry.TABLE_NAME+" ("+
@@ -54,7 +54,7 @@ public class ImageDao {
             Contract.ImageTypeEntry.BASE_URL_COLUMN + " VARCHAR NOT NULL, " +
             Contract.ImageTypeEntry.WIDTH_COLUMN + " INTEGER, " +
             Contract.ImageTypeEntry.HEIGHT_COLUMN + " INTEGER" +
-            ")";
+            ");";
 
     private static final String SQL_DROP_IMAGES_TABLE = "DROP TABLE IF EXISTS "+ Contract.ImageEntry.TABLE_NAME;
 
@@ -126,23 +126,17 @@ public class ImageDao {
         return result;
     }
 
-    public boolean createTables() throws SQLException {
-        boolean result = true;
+    public void createTables() throws SQLException {
         Statement statement = connection.createStatement();
-        result = result && statement.execute(SQL_CREATE_IMAGES_TABLE);
-        System.out.println(Contract.ImageEntry.TABLE_NAME+" table "+(result?"created":"not created"));
-        result = result && statement.execute(SQL_CREATE_IMAGE_TYPES_TABLE);
-        System.out.println(Contract.ImageTypeEntry.TABLE_NAME+" table "+(result?"created":"not created"));
+        statement.execute(SQL_CREATE_IMAGE_TYPES_TABLE);
+        statement.execute(SQL_CREATE_IMAGES_TABLE);
         statement.close();
-        return result;
     }
 
-    public boolean dropTabales() throws SQLException {
-        boolean result = true;
+    public void dropTables() throws SQLException {
         Statement statement =  connection.createStatement();
-        result = result && statement.execute(SQL_DROP_IMAGES_TABLE);
-        result = result && statement.execute(SQL_DROP_IMAGE_TYPES_TABLE);
+        statement.execute(SQL_DROP_IMAGES_TABLE);
+        statement.execute(SQL_DROP_IMAGE_TYPES_TABLE);
         statement.close();
-        return result;
     }
 }

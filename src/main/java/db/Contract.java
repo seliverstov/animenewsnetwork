@@ -5,7 +5,7 @@ package db;
  */
 public class Contract {
     public static final class ImageEntry {
-        public static final String TABLE_NAME = "images";
+        public static final String TABLE_NAME = "manga_images";
 
         public static final String _ID = "_id";
         public static final String MANGA_ID_COLUMN = "manga_id";
@@ -16,7 +16,7 @@ public class Contract {
     }
 
     public static final class ImageTypeEntry {
-        public static final String TABLE_NAME = "image_types";
+        public static final String TABLE_NAME = "images";
 
         public static final String _ID = "_id";
         public static final String TYPE_COLUMN = "type";
@@ -33,8 +33,8 @@ public class Contract {
         public static final String NAME_COLUMN = "name";
         public static final String PLOT_COLUMN = "plot";
         public static final String VOTES_COLUMN = "votes";
-        public static final String WEIGHTED_SCORE_COLUMN = "weightedScore";
-        public static final String BAYESIAN_SCORE_COLUMN = "bayesianScore";
+        public static final String WEIGHTED_SCORE_COLUMN = "weighted_score";
+        public static final String BAYESIAN_SCORE_COLUMN = "bayesian_score";
         public static final String PAGES_COLUMN = "pages";
         public static final String EPISODES_COLUMN = "episodes";
         public static final String OBJECTIONABLE_CONTENT_COLUMN = "objectionable_content";
