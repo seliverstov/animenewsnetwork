@@ -89,6 +89,21 @@ public class Contract {
         public static final String NAME_COLUMN = "name";
         public static final String HREF_COLUMN = "href";
         public static final String LANG_COLUMN = "lang";
+    }
 
+    public static final class RelatedEntry {
+        public static final String TABLE_NAME = "related";
+
+        public static final String _ID = "_id";
+        public static final String NAME_COLUMN = "name";
+    }
+
+    public static final class MangaRelatedEntry {
+        public static final String TABLE_NAME = "manga_related";
+
+        public static final String _ID = "_id";
+        public static final String MANGA_ID_COLUMN = "manga_id";
+        public static final String REL_ID_COLUMN = "rel_id";
+        public static final String REL_MANGA_ID_COLUMN = "rel_manga_id";
     }
 }
