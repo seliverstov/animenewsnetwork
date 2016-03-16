@@ -1,5 +1,6 @@
 package db;
 
+import xml.Anime;
 import xml.Manga;
 
 import java.sql.*;
@@ -30,6 +31,10 @@ public class MangaDao {
     private static final String SQL_QUERY_THEME_ID = "SELECT "+ThemeEntry._ID+ " FROM "+ThemeEntry.TABLE_NAME+" WHERE "+ThemeEntry.NAME_COLUMN+" = ?";
 
     private static final String SQL_QUERY_RELATED_ID = "SELECT "+ RelatedEntry._ID+ " FROM "+ RelatedEntry.TABLE_NAME+" WHERE "+ RelatedEntry.NAME_COLUMN+" = ?";
+
+    private static final String SQL_QUERY_TASK_ID = "SELECT "+ TaskEntry._ID+ " FROM "+ TaskEntry.TABLE_NAME+" WHERE "+ TaskEntry.NAME_COLUMN+" = ?";
+
+    private static final String SQL_QUERY_PERSON_ID = "SELECT "+ PersonEntry._ID+ " FROM "+ PersonEntry.TABLE_NAME+" WHERE "+ PersonEntry.NAME_COLUMN+" = ?";
 
     private static final String SQL_INSERT_MANGA = "INSERT INTO "+ MangaEntry.TABLE_NAME + "(" +
             MangaEntry._ID + ", " +
@@ -67,6 +72,14 @@ public class MangaDao {
             RelatedEntry.NAME_COLUMN + ") " +
             "VALUES (?);";
 
+    private static final String SQL_INSERT_TASK = "INSERT INTO "+ TaskEntry.TABLE_NAME + "(" +
+            TaskEntry.NAME_COLUMN + ") " +
+            "VALUES (?);";
+
+    private static final String SQL_INSERT_PERSON = "INSERT INTO "+ PersonEntry.TABLE_NAME + "(" +
+            PersonEntry.NAME_COLUMN + ") " +
+            "VALUES (?);";
+
     private static final String SQL_INSERT_MANGA_RELATED = "INSERT INTO "+ MangaRelatedEntry.TABLE_NAME + "(" +
             MangaRelatedEntry.MANGA_ID_COLUMN + ", " +
             MangaRelatedEntry.REL_ID_COLUMN + ", " +
@@ -79,12 +92,32 @@ public class MangaDao {
             MangaTitleEntry.LANG_COLUMN + ") " +
             "VALUES (?, ?, ?);";
 
+    private static final String SQL_INSERT_MANGA_EPISODE = "INSERT INTO "+ MangaEpisodeEntry.TABLE_NAME + "(" +
+            MangaEpisodeEntry.MANGA_ID_COLUMN + ", " +
+            MangaEpisodeEntry.NAME_COLUMN + ", " +
+            MangaEpisodeEntry.NUM_COLUMN + ", " +
+            MangaEpisodeEntry.PART_COLUMN + ", " +
+            MangaEpisodeEntry.LANG_COLUMN + ") " +
+            "VALUES (?, ?, ?, ?, ?);";
+
     private static final String SQL_INSERT_MANGA_LINK = "INSERT INTO "+ MangaLinkEntry.TABLE_NAME + "(" +
             MangaLinkEntry.MANGA_ID_COLUMN + ", " +
             MangaLinkEntry.NAME_COLUMN + ", " +
             MangaLinkEntry.HREF_COLUMN + ", " +
             MangaLinkEntry.LANG_COLUMN + ") " +
             "VALUES (?, ?, ?, ?);";
+
+    private static final String SQL_INSERT_MANGA_REVIEW = "INSERT INTO "+ MangaReviewEntry.TABLE_NAME + "(" +
+            MangaReviewEntry.MANGA_ID_COLUMN + ", " +
+            MangaReviewEntry.NAME_COLUMN + ", " +
+            MangaReviewEntry.HREF_COLUMN + ") " +
+            "VALUES (?, ?, ?);";
+
+    private static final String SQL_INSERT_MANGA_STAFF = "INSERT INTO "+ MangaStaffEntry.TABLE_NAME + "(" +
+            MangaStaffEntry.MANGA_ID_COLUMN + ", " +
+            MangaStaffEntry.TASK_ID_COLUMN + ", " +
+            MangaStaffEntry.PERSON_ID_COLUMN + ") " +
+            "VALUES (?, ?, ?);";
 
     private static final String SQL_CREATE_MANGA_TABLE = "CREATE TABLE IF NOT EXISTS "+MangaEntry.TABLE_NAME+" ("+
             MangaEntry._ID + " INTEGER PRIMARY KEY, " +
@@ -140,6 +173,34 @@ public class MangaDao {
             MangaRelatedEntry.REL_ID_COLUMN + " INTEGER NOT NULL, " +
             MangaRelatedEntry.REL_MANGA_ID_COLUMN + " INTEGER NOT NULL " + ");";
 
+    private static final String SQL_CREATE_MANGA_EPISODES_TABLE = "CREATE TABLE IF NOT EXISTS "+ MangaEpisodeEntry.TABLE_NAME+" ("+
+            MangaEpisodeEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            MangaEpisodeEntry.MANGA_ID_COLUMN + " INTEGER NOT NULL, " +
+            MangaEpisodeEntry.NAME_COLUMN + " VARCHAR, " +
+            MangaEpisodeEntry.NUM_COLUMN + " VARCHAR, " +
+            MangaEpisodeEntry.PART_COLUMN + " VARCHAR, " +
+            MangaEpisodeEntry.LANG_COLUMN + " VARCHAR " + ");";
+
+    private static final String SQL_CREATE_MANGA_REVIEWS_TABLE = "CREATE TABLE IF NOT EXISTS "+ MangaReviewEntry.TABLE_NAME+" ("+
+            MangaReviewEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            MangaReviewEntry.MANGA_ID_COLUMN + " INTEGER NOT NULL, " +
+            MangaReviewEntry.NAME_COLUMN + " VARCHAR NOT NULL, " +
+            MangaReviewEntry.HREF_COLUMN + " VARCHAR NOT NULL" + ");";
+
+    private static final String SQL_CREATE_TASKS_TABLE = "CREATE TABLE IF NOT EXISTS "+TaskEntry.TABLE_NAME+" ("+
+            TaskEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            TaskEntry.NAME_COLUMN + " VARCHAR NOT NULL " + ");";
+
+    private static final String SQL_CREATE_PERSONS_TABLE = "CREATE TABLE IF NOT EXISTS "+PersonEntry.TABLE_NAME+" ("+
+            PersonEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            PersonEntry.NAME_COLUMN + " VARCHAR NOT NULL " + ");";
+
+    private static final String SQL_CREATE_MANGA_STAFF_TABLE = "CREATE TABLE IF NOT EXISTS "+ MangaStaffEntry.TABLE_NAME+" ("+
+            MangaStaffEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            MangaStaffEntry.MANGA_ID_COLUMN + " INTEGER NOT NULL, " +
+            MangaStaffEntry.TASK_ID_COLUMN + " INTEGER NOT NULL, " +
+            MangaStaffEntry.PERSON_ID_COLUMN + " INTEGER NOT NULL " + ");";
+
     private static final String SQL_DROP_MANGA_TABLE = "DROP TABLE IF EXISTS "+ Contract.MangaEntry.TABLE_NAME;
 
     private static final String SQL_DROP_GENRES_TABLE = "DROP TABLE IF EXISTS "+ Contract.GenreEntry.TABLE_NAME;
@@ -158,6 +219,15 @@ public class MangaDao {
 
     private static final String SQL_DROP_MANGA_RELATED_TABLE = "DROP TABLE IF EXISTS "+ MangaRelatedEntry.TABLE_NAME;
 
+    private static final String SQL_DROP_MANGA_EPISODES_TABLE = "DROP TABLE IF EXISTS "+ MangaEpisodeEntry.TABLE_NAME;
+
+    private static final String SQL_DROP_MANGA_REVIEWS_TABLE = "DROP TABLE IF EXISTS "+ MangaReviewEntry.TABLE_NAME;
+
+    private static final String SQL_DROP_PERSONS_TABLE = "DROP TABLE IF EXISTS "+ PersonEntry.TABLE_NAME;
+
+    private static final String SQL_DROP_TASKS_TABLE = "DROP TABLE IF EXISTS "+ TaskEntry.TABLE_NAME;
+
+    private static final String SQL_DROP_MANGA_STAFF_TABLE = "DROP TABLE IF EXISTS "+ MangaStaffEntry.TABLE_NAME;
 
     public MangaDao(Connection connection){
         this.connection = connection;
@@ -200,6 +270,22 @@ public class MangaDao {
             rs.close();
         }
         return result;
+    }
+
+    protected int createPerson(String name) throws SQLException {
+        return createDictionaryEntry(name, SQL_INSERT_PERSON);
+    }
+
+    protected int queryPersonId(String name) throws SQLException {
+        return queryDictionaryEntry(name, SQL_QUERY_PERSON_ID);
+    }
+
+    protected int createTask(String name) throws SQLException {
+        return createDictionaryEntry(name, SQL_INSERT_TASK);
+    }
+
+    protected int queryTaskId(String name) throws SQLException {
+        return queryDictionaryEntry(name, SQL_QUERY_TASK_ID);
     }
 
     protected int createRelated(String name) throws SQLException {
@@ -280,6 +366,53 @@ public class MangaDao {
         return result;
     }
 
+    protected int createMangaEpisode(int mangaId, String name, String num, String part, String lang) throws SQLException {
+        int result = -1;
+        PreparedStatement ps = connection.prepareStatement(SQL_INSERT_MANGA_EPISODE);
+        ps.setInt(1, mangaId);
+        ps.setString(2, name);
+        ps.setString(3, num);
+        ps.setString(4, part);
+        ps.setString(5, lang);
+        ps.executeUpdate();
+        ResultSet rs = ps.getGeneratedKeys();
+        if (rs!=null && rs.next()){
+            result = rs.getInt(1);
+            rs.close();
+        }
+        return result;
+    }
+
+    protected int createMangaReview(int mangaId, String name, String href) throws SQLException {
+        int result = -1;
+        PreparedStatement ps = connection.prepareStatement(SQL_INSERT_MANGA_REVIEW);
+        ps.setInt(1, mangaId);
+        ps.setString(2, name);
+        ps.setString(3, href);
+        ps.executeUpdate();
+        ResultSet rs = ps.getGeneratedKeys();
+        if (rs!=null && rs.next()){
+            result = rs.getInt(1);
+            rs.close();
+        }
+        return result;
+    }
+
+    protected int createMangaStaff(int mangaId, int taskId, int personId) throws SQLException {
+        int result = -1;
+        PreparedStatement ps = connection.prepareStatement(SQL_INSERT_MANGA_STAFF);
+        ps.setInt(1, mangaId);
+        ps.setInt(2, taskId);
+        ps.setInt(3, personId);
+        ps.executeUpdate();
+        ResultSet rs = ps.getGeneratedKeys();
+        if (rs!=null && rs.next()){
+            result = rs.getInt(1);
+            rs.close();
+        }
+        return result;
+    }
+
     public int create(Manga manga) throws SQLException {
         String plot = null;
         String pages = null;
@@ -324,6 +457,33 @@ public class MangaDao {
                 createMangaRelated(manga.annId,id,r.annId);
             }
         }
+        if (manga.reviews!=null){
+            for(Manga.Review r: manga.reviews){
+                createMangaReview(manga.annId,r.text,r.href);
+            }
+        }
+        if (manga.staff!=null){
+            for(Manga.Staff s: manga.staff){
+                int taskId = queryTaskId(s.task);
+                if (taskId==-1)
+                    taskId = createTask(s.task);
+                int personId = queryPersonId(s.person);
+                if (personId==-1){
+                    personId = createPerson(s.person);
+                }
+                createMangaStaff(manga.annId,taskId,personId);
+            }
+        }
+        if (manga instanceof Anime){
+            Anime anime = (Anime)manga;
+            if (anime.episodes!=null){
+                for(Anime.Episode e: anime.episodes){
+                    for(Anime.Episode.Title t: e.titles) {
+                        createMangaEpisode(anime.annId, t.title, e.num, t.part, t.lang);
+                    }
+                }
+            }
+        }
         PreparedStatement ps = connection.prepareStatement(SQL_INSERT_MANGA);
         ps.setInt(1,manga.annId);
         ps.setString(2,manga.type);
@@ -358,6 +518,12 @@ public class MangaDao {
         statement.execute(SQL_CREATE_MANGA_LINKS_TABLE);
         statement.execute(SQL_CREATE_RELATED_TABLE);
         statement.execute(SQL_CREATE_MANGA_RELATED_TABLE);
+        statement.execute(SQL_CREATE_MANGA_EPISODES_TABLE);
+        statement.execute(SQL_CREATE_MANGA_REVIEWS_TABLE);
+        statement.execute(SQL_CREATE_TASKS_TABLE);
+        statement.execute(SQL_CREATE_PERSONS_TABLE);
+        statement.execute(SQL_CREATE_MANGA_STAFF_TABLE);
+
         statement.close();
     }
 
@@ -371,6 +537,11 @@ public class MangaDao {
         statement.execute(SQL_DROP_RELATED_TABLE);
         statement.execute(SQL_DROP_MANGA_TITLES_TABLE);
         statement.execute(SQL_DROP_MANGA_LINKS_TABLE);
+        statement.execute(SQL_DROP_MANGA_EPISODES_TABLE);
+        statement.execute(SQL_DROP_MANGA_REVIEWS_TABLE);
+        statement.execute(SQL_DROP_MANGA_STAFF_TABLE);
+        statement.execute(SQL_DROP_TASKS_TABLE);
+        statement.execute(SQL_DROP_PERSONS_TABLE);
         statement.execute(SQL_DROP_MANGA_TABLE);
         statement.close();
     }

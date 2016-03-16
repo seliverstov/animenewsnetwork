@@ -106,4 +106,47 @@ public class Contract {
         public static final String REL_ID_COLUMN = "rel_id";
         public static final String REL_MANGA_ID_COLUMN = "rel_manga_id";
     }
+
+    public static final class MangaEpisodeEntry {
+        public static final String TABLE_NAME = "manga_episodes";
+
+        public static final String _ID = "_id";
+        public static final String MANGA_ID_COLUMN = "manga_id";
+        public static final String NAME_COLUMN = "name";
+        public static final String NUM_COLUMN = "num";
+        public static final String PART_COLUMN = "part";
+        public static final String LANG_COLUMN = "lang";
+    }
+
+    public static final class MangaReviewEntry {
+        public static final String TABLE_NAME = "manga_reviews";
+
+        public static final String _ID = "_id";
+        public static final String MANGA_ID_COLUMN = "manga_id";
+        public static final String NAME_COLUMN = "name";
+        public static final String HREF_COLUMN = "href";
+    }
+
+    public static final class PersonEntry {
+        public static final String TABLE_NAME = "persons";
+
+        public static final String _ID = "_id";
+        public static final String NAME_COLUMN = "name";
+    }
+
+    public static final class TaskEntry {
+        public static final String TABLE_NAME = "tasks";
+
+        public static final String _ID = "_id";
+        public static final String NAME_COLUMN = "name";
+    }
+
+    public static final class MangaStaffEntry {
+        public static final String TABLE_NAME = "manga_staff";
+
+        public static final String _ID = "_id";
+        public static final String MANGA_ID_COLUMN = "manga_id";
+        public static final String TASK_ID_COLUMN = "task_id";
+        public static final String PERSON_ID_COLUMN = "person_id";
+    }
 }
