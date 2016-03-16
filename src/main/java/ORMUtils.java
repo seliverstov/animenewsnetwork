@@ -27,7 +27,7 @@ public class ORMUtils {
         TableUtils.createTableIfNotExists(connectionSource, Anime.Episode.class);
         TableUtils.createTableIfNotExists(connectionSource, Anime.Episode.Title.class);
         TableUtils.createTableIfNotExists(connectionSource, Anime.Cast.class);
-        TableUtils.createTableIfNotExists(connectionSource, Images.Img.class);
+        TableUtils.createTableIfNotExists(connectionSource, Image.class);
     }
 
     public static void fillDatabase(ConnectionSource connectionSource, String basePath, boolean loadImages) throws Exception {
@@ -104,12 +104,12 @@ public class ORMUtils {
     }
 
     public static void saveImages(Images images, ConnectionSource connectionSource) throws SQLException {
-        Dao<Images.Img,Integer> imagesDao = DaoManager.createDao(connectionSource, Images.Img.class);
+        Dao<Image,Integer> imagesDao = DaoManager.createDao(connectionSource, Image.class);
 
         Dao<Manga, Integer> mangaDao = DaoManager.createDao(connectionSource, Manga.class);
 
         Integer annId = null;
-        Collection<Images.Img> imagesCollection = null;
+        Collection<Image> imagesCollection = null;
         if (images.animeId!=0) {
             annId=images.animeId;
             imagesCollection = images.animeImages;
@@ -118,7 +118,7 @@ public class ORMUtils {
             imagesCollection = images.mangaImages;
         }
         if (annId!=null && imagesCollection!=null){
-            for(Images.Img i:imagesCollection){
+            for(Image i:imagesCollection){
                 QueryBuilder<Manga,Integer> qb = mangaDao.queryBuilder();
                 qb.where().eq("annId",annId);
                 PreparedQuery<Manga> pq = qb.prepare();

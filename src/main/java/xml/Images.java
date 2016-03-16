@@ -1,11 +1,8 @@
 package xml;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
 import org.simpleframework.xml.*;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by a.g.seliverstov on 10.03.2016.
@@ -21,35 +18,13 @@ public class Images {
     @Path("anime")
     public int animeId;
 
-    @ElementList(entry = "img", required = false, inline = true, type = Img.class)
+    @ElementList(entry = "img", required = false, inline = true, type = Image.class)
     @Path("manga/info")
-    public Collection<Img> mangaImages;
+    public Collection<Image> mangaImages;
 
-    @ElementList(entry = "img", required = false, inline = true, type = Img.class)
+    @ElementList(entry = "img", required = false, inline = true, type = Image.class)
     @Path("anime/info")
-    public Collection<Img> animeImages;
-
-    @DatabaseTable(tableName = "images")
-    @Root
-    public static class Img {
-        @DatabaseField(generatedId = true)
-        public int id;
-
-        @DatabaseField(foreign = true, foreignAutoCreate = true)
-        public Manga manga;
-
-        @DatabaseField
-        @Attribute
-        public String src;
-
-        @DatabaseField
-        @Attribute
-        public int width;
-
-        @DatabaseField
-        @Attribute
-        public int height;
-    }
+    public Collection<Image> animeImages;
 
     @Override
     public String toString() {
