@@ -24,7 +24,11 @@ public class MangaDao {
     private static final String GENRES = "Genres";
     private static final String TITLES = "Alternative title";
     private static final String LINKS = "Official website";
+    private static final String OPENING_THEME = "Opening Theme";
+    private static final String ENDING_THEME = "Ending Theme";
 
+    private static final String OPENING_THEME_SHORTCUT = "O";
+    private static final String ENDING_THEME_SHORTCUT = "E";
 
     private static final String SQL_QUERY_GENRE_ID = "SELECT "+GenreEntry._ID+ " FROM "+GenreEntry.TABLE_NAME+" WHERE "+GenreEntry.NAME_COLUMN+" = ?";
 
@@ -119,6 +123,19 @@ public class MangaDao {
             MangaStaffEntry.PERSON_ID_COLUMN + ") " +
             "VALUES (?, ?, ?);";
 
+    private static final String SQL_INSERT_MANGA_NEWS = "INSERT INTO "+ MangaNewsEntry.TABLE_NAME + "(" +
+            MangaNewsEntry.MANGA_ID_COLUMN + ", " +
+            MangaNewsEntry.NAME_COLUMN + ", " +
+            MangaNewsEntry.HREF_COLUMN + ", " +
+            MangaNewsEntry.DATE_COLUMN + ") " +
+            "VALUES (?, ?, ?, ?);";
+
+    private static final String SQL_INSERT_MANGA_MUSIC = "INSERT INTO "+ MangaMusicEntry.TABLE_NAME + "(" +
+            MangaMusicEntry.MANGA_ID_COLUMN + ", " +
+            MangaMusicEntry.NAME_COLUMN + ", " +
+            MangaMusicEntry.TYPE_COLUMN + ") " +
+            "VALUES (?, ?, ?);";
+
     private static final String SQL_CREATE_MANGA_TABLE = "CREATE TABLE IF NOT EXISTS "+MangaEntry.TABLE_NAME+" ("+
             MangaEntry._ID + " INTEGER PRIMARY KEY, " +
             MangaEntry.TYPE_COLUMN + " VARCHAR NOT NULL, " +
@@ -201,6 +218,19 @@ public class MangaDao {
             MangaStaffEntry.TASK_ID_COLUMN + " INTEGER NOT NULL, " +
             MangaStaffEntry.PERSON_ID_COLUMN + " INTEGER NOT NULL " + ");";
 
+    private static final String SQL_CREATE_MANGA_NEWS_TABLE = "CREATE TABLE IF NOT EXISTS "+ MangaNewsEntry.TABLE_NAME+" ("+
+            MangaNewsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            MangaNewsEntry.MANGA_ID_COLUMN + " INTEGER NOT NULL, " +
+            MangaNewsEntry.NAME_COLUMN + " VARCHAR NOT NULL, " +
+            MangaNewsEntry.HREF_COLUMN + " VARCHAR NOT NULL, " +
+            MangaNewsEntry.DATE_COLUMN + " VARCHAR NOT NULL" + ");";
+
+    private static final String SQL_CREATE_MANGA_MUSIC_TABLE = "CREATE TABLE IF NOT EXISTS "+ MangaMusicEntry.TABLE_NAME+" ("+
+            MangaMusicEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            MangaMusicEntry.MANGA_ID_COLUMN + " INTEGER NOT NULL, " +
+            MangaMusicEntry.NAME_COLUMN + " VARCHAR NOT NULL, " +
+            MangaMusicEntry.TYPE_COLUMN + " VARCHAR NOT NULL" + ");";
+
     private static final String SQL_DROP_MANGA_TABLE = "DROP TABLE IF EXISTS "+ Contract.MangaEntry.TABLE_NAME;
 
     private static final String SQL_DROP_GENRES_TABLE = "DROP TABLE IF EXISTS "+ Contract.GenreEntry.TABLE_NAME;
@@ -228,6 +258,10 @@ public class MangaDao {
     private static final String SQL_DROP_TASKS_TABLE = "DROP TABLE IF EXISTS "+ TaskEntry.TABLE_NAME;
 
     private static final String SQL_DROP_MANGA_STAFF_TABLE = "DROP TABLE IF EXISTS "+ MangaStaffEntry.TABLE_NAME;
+
+    private static final String SQL_DROP_MANGA_NEWS_TABLE = "DROP TABLE IF EXISTS "+ MangaNewsEntry.TABLE_NAME;
+
+    private static final String SQL_DROP_MANGA_MUSIC_TABLE = "DROP TABLE IF EXISTS "+ MangaMusicEntry.TABLE_NAME;
 
     public MangaDao(Connection connection){
         this.connection = connection;
@@ -413,6 +447,37 @@ public class MangaDao {
         return result;
     }
 
+    protected int createMangaNews(int mangaId, String name, String href, String date) throws SQLException {
+        int result = -1;
+        PreparedStatement ps = connection.prepareStatement(SQL_INSERT_MANGA_NEWS);
+        ps.setInt(1, mangaId);
+        ps.setString(2, name);
+        ps.setString(3, href);
+        ps.setString(4, date);
+        ps.executeUpdate();
+        ResultSet rs = ps.getGeneratedKeys();
+        if (rs!=null && rs.next()){
+            result = rs.getInt(1);
+            rs.close();
+        }
+        return result;
+    }
+
+    protected int createMangaMusic(int mangaId, String name, String type) throws SQLException {
+        int result = -1;
+        PreparedStatement ps = connection.prepareStatement(SQL_INSERT_MANGA_MUSIC);
+        ps.setInt(1, mangaId);
+        ps.setString(2, name);
+        ps.setString(3, type);
+        ps.executeUpdate();
+        ResultSet rs = ps.getGeneratedKeys();
+        if (rs!=null && rs.next()){
+            result = rs.getInt(1);
+            rs.close();
+        }
+        return result;
+    }
+
     public int create(Manga manga) throws SQLException {
         String plot = null;
         String pages = null;
@@ -446,6 +511,10 @@ public class MangaDao {
                 }else if (LINKS.equalsIgnoreCase(i.type)){
                     if (i.href!=null)
                         createMangaLink(manga.annId, (i.value!=null)?i.value:i.href, i.href, i.lang);
+                }else if (OPENING_THEME.equalsIgnoreCase(i.type)){
+                    createMangaMusic(manga.annId,i.value,OPENING_THEME_SHORTCUT);
+                }else if (ENDING_THEME.equalsIgnoreCase(i.type)){
+                    createMangaMusic(manga.annId,i.value,ENDING_THEME_SHORTCUT);
                 }
             }
         }
@@ -472,6 +541,11 @@ public class MangaDao {
                     personId = createPerson(s.person);
                 }
                 createMangaStaff(manga.annId,taskId,personId);
+            }
+        }
+        if (manga.news!=null){
+            for(Manga.News n: manga.news){
+                createMangaNews(manga.annId,n.text,n.href, n.date);
             }
         }
         if (manga instanceof Anime){
@@ -523,7 +597,8 @@ public class MangaDao {
         statement.execute(SQL_CREATE_TASKS_TABLE);
         statement.execute(SQL_CREATE_PERSONS_TABLE);
         statement.execute(SQL_CREATE_MANGA_STAFF_TABLE);
-
+        statement.execute(SQL_CREATE_MANGA_NEWS_TABLE);
+        statement.execute(SQL_CREATE_MANGA_MUSIC_TABLE);
         statement.close();
     }
 
@@ -542,6 +617,8 @@ public class MangaDao {
         statement.execute(SQL_DROP_MANGA_STAFF_TABLE);
         statement.execute(SQL_DROP_TASKS_TABLE);
         statement.execute(SQL_DROP_PERSONS_TABLE);
+        statement.execute(SQL_DROP_MANGA_NEWS_TABLE);
+        statement.execute(SQL_DROP_MANGA_MUSIC_TABLE);
         statement.execute(SQL_DROP_MANGA_TABLE);
         statement.close();
     }

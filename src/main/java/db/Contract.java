@@ -149,4 +149,23 @@ public class Contract {
         public static final String TASK_ID_COLUMN = "task_id";
         public static final String PERSON_ID_COLUMN = "person_id";
     }
+
+    public static final class MangaNewsEntry {
+        public static final String TABLE_NAME = "manga_news";
+
+        public static final String _ID = "_id";
+        public static final String MANGA_ID_COLUMN = "manga_id";
+        public static final String NAME_COLUMN = "name";
+        public static final String HREF_COLUMN = "href";
+        public static final String DATE_COLUMN = "date";
+    }
+
+    public static final class MangaMusicEntry {
+        public static final String TABLE_NAME = "manga_music";
+
+        public static final String _ID = "_id";
+        public static final String MANGA_ID_COLUMN = "manga_id";
+        public static final String NAME_COLUMN = "name";
+        public static final String TYPE_COLUMN = "type";
+    }
 }
