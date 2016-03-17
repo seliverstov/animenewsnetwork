@@ -276,6 +276,7 @@ public class MangaDao {
         ResultSet rs = ps.getGeneratedKeys();
         if (rs!=null && rs.next()){
             result = rs.getInt(1);
+            rs.close();
         }
         ps.close();
         return result;
