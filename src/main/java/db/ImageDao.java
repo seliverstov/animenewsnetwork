@@ -1,6 +1,5 @@
 package db;
 
-import com.j256.ormlite.support.ConnectionSource;
 import xml.Image;
 
 import java.sql.*;
@@ -121,6 +120,7 @@ public class ImageDao {
         int result = -1;
         if (rs!=null && rs.next()){
             result = rs.getInt(1);
+            rs.close();
         }
         ps.close();
         return result;

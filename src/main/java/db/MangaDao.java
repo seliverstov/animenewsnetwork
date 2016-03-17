@@ -277,6 +277,7 @@ public class MangaDao {
         if (rs!=null && rs.next()){
             result = rs.getInt(1);
         }
+        ps.close();
         return result;
     }
 
@@ -291,6 +292,7 @@ public class MangaDao {
             result = rs.getInt(1);
             rs.close();
         }
+        ps.close();
         return result;
     }
 
@@ -303,6 +305,7 @@ public class MangaDao {
             result = rs.getInt(1);
             rs.close();
         }
+        ps.close();
         return result;
     }
 
@@ -366,6 +369,7 @@ public class MangaDao {
             result = rs.getInt(1);
             rs.close();
         }
+        ps.close();
         return result;
     }
 
@@ -382,6 +386,7 @@ public class MangaDao {
             result = rs.getInt(1);
             rs.close();
         }
+        ps.close();
         return result;
     }
 
@@ -397,6 +402,7 @@ public class MangaDao {
             result = rs.getInt(1);
             rs.close();
         }
+        ps.close();
         return result;
     }
 
@@ -414,6 +420,7 @@ public class MangaDao {
             result = rs.getInt(1);
             rs.close();
         }
+        ps.close();
         return result;
     }
 
@@ -429,6 +436,7 @@ public class MangaDao {
             result = rs.getInt(1);
             rs.close();
         }
+        ps.close();
         return result;
     }
 
@@ -444,6 +452,7 @@ public class MangaDao {
             result = rs.getInt(1);
             rs.close();
         }
+        ps.close();
         return result;
     }
 
@@ -460,6 +469,7 @@ public class MangaDao {
             result = rs.getInt(1);
             rs.close();
         }
+        ps.close();
         return result;
     }
 
@@ -475,6 +485,7 @@ public class MangaDao {
             result = rs.getInt(1);
             rs.close();
         }
+        ps.close();
         return result;
     }
 
