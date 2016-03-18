@@ -575,9 +575,21 @@ public class MangaDao {
         ps.setString(2,manga.type);
         ps.setString(3,manga.name);
         ps.setString(4,plot);
-        ps.setInt(5,manga.votes);
-        ps.setFloat(6,manga.weightedScore);
-        ps.setFloat(7,manga.bayesianScore);
+        if (manga.votes!=0) {
+            ps.setInt(5, manga.votes);
+        }else{
+            ps.setNull(5, Types.INTEGER);
+        }
+        if (manga.weightedScore!=0) {
+            ps.setFloat(6, manga.weightedScore);
+        }else{
+            ps.setNull(6, Types.FLOAT);
+        }
+        if (manga.bayesianScore!=0) {
+            ps.setFloat(7, manga.bayesianScore);
+        }else{
+            ps.setNull(7, Types.FLOAT);
+        }
         ps.setString(8,pages);
         ps.setString(9,episodes);
         ps.setString(10,obj_cont);
@@ -587,7 +599,7 @@ public class MangaDao {
         int result = -1;
         if (rs!=null && rs.next()){
             result = rs.getInt(1);
-            rs.close();;
+            rs.close();
         }
         ps.close();
         return result;
