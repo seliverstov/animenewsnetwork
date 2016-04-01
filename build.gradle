@@ -38,5 +38,9 @@ task runSQLUtils(type: JavaExec) {
     main = "SQLUtils"
 }
 
+task runCloudFlare(type: JavaExec) {
+    classpath  sourceSets.main.runtimeClasspath
+    main = "CloudFlare"
+}
 
 

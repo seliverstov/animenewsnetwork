@@ -7,7 +7,6 @@ import java.io.InputStream;
  */
 public interface AnimeNewsNetworkClient {
     String BASE_URL = "http://cdn.animenewsnetwork.com";
-    String CF_BYPASS_BASE_URL = "https://cherry-pudding-87894.herokuapp.com";
     String QUERY_TITLES = "/encyclopedia/reports.xml?id=155";
     String QUERY_TITLES_NLIST_PARAMETER = "nlist";
     String QUERY_TITLES_NSKIP_PARAMETER = "nskip";

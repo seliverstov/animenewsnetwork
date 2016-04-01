@@ -15,16 +15,17 @@ import java.net.Proxy;
 public class AnimeNewsNetworkClientImpl implements AnimeNewsNetworkClient {
     private OkHttpClient client;
     private String baseUrl;
+    private boolean bypass;
 
-    public AnimeNewsNetworkClientImpl(boolean proxy, boolean CFBypass){
+    public AnimeNewsNetworkClientImpl(boolean proxy, boolean bypass){
         if (proxy) {
             client = new OkHttpClient.Builder().proxy(new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved("127.0.0.1", 3128))).build();
         }else{
             client = new OkHttpClient();
         }
-
-        if (CFBypass){
-            baseUrl = AnimeNewsNetworkClient.CF_BYPASS_BASE_URL;
+        this.bypass = bypass;
+        if (bypass){
+            baseUrl = CloudFlare.bypass(AnimeNewsNetworkClient.BASE_URL);
         }else{
             baseUrl = AnimeNewsNetworkClient.BASE_URL;
         }
@@ -77,8 +78,8 @@ public class AnimeNewsNetworkClientImpl implements AnimeNewsNetworkClient {
     public Source queryImage(String url) {
         try {
             System.out.println("Query image: "+url);
-            if (url.startsWith(AnimeNewsNetworkClient.BASE_URL) && !baseUrl.equals(AnimeNewsNetworkClient.BASE_URL)){
-                url = url.replace(AnimeNewsNetworkClient.BASE_URL, baseUrl);
+            if (bypass){
+                url = CloudFlare.bypass(url);
                 System.out.println("Update url to: "+url);
             }
             Request request = new Request.Builder().url(url).build();
