@@ -22,8 +22,15 @@ public class DumpToFiles {
 
     private boolean proxy;
 
+    public void setBypass(boolean bypass) {
+        this.bypass = bypass;
+        client = new AnimeNewsNetworkClientImpl(proxy,bypass);
+    }
+
+    private boolean bypass;
+
     public DumpToFiles(){
-        client = new AnimeNewsNetworkClientImpl(proxy);
+        client = new AnimeNewsNetworkClientImpl(proxy, bypass);
     }
 
     public void createNewDump(String rootDirPath) throws IOException{
@@ -178,6 +185,7 @@ public class DumpToFiles {
         if (!baseDir.endsWith("\\")||!baseDir.endsWith("/"))
             baseDir+="/";
         dumpUtil.setProxy(true);
+        dumpUtil.setBypass(true);
         dumpUtil.dump(
                 baseDir,
                 null,
@@ -220,6 +228,6 @@ public class DumpToFiles {
 
     public void setProxy(boolean proxy) {
         this.proxy = proxy;
-        client = new AnimeNewsNetworkClientImpl(proxy);
+        client = new AnimeNewsNetworkClientImpl(proxy,bypass);
     }
 }

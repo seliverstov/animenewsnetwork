@@ -14,24 +14,31 @@ import java.net.Proxy;
  */
 public class AnimeNewsNetworkClientImpl implements AnimeNewsNetworkClient {
     private OkHttpClient client;
+    private String baseUrl;
 
-    public AnimeNewsNetworkClientImpl(boolean proxy){
+    public AnimeNewsNetworkClientImpl(boolean proxy, boolean CFBypass){
         if (proxy) {
             client = new OkHttpClient.Builder().proxy(new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved("127.0.0.1", 3128))).build();
         }else{
             client = new OkHttpClient();
         }
+
+        if (CFBypass){
+            baseUrl = AnimeNewsNetworkClient.CF_BYPASS_BASE_URL;
+        }else{
+            baseUrl = AnimeNewsNetworkClient.BASE_URL;
+        }
     }
 
     public AnimeNewsNetworkClientImpl(){
-        this(true);
+        this(true, true);
     }
 
     @Override
     public String queryTitlesXML(Integer skip, Integer list, AnimeType type, String name) {
         if (skip < 0 || list < 0) return null;
         try{
-            HttpUrl.Builder urlBuilder = HttpUrl.parse(QUERY_TITLES).newBuilder();
+            HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl+QUERY_TITLES).newBuilder();
             if (skip>0) {
                 urlBuilder.addQueryParameter(QUERY_TITLES_NSKIP_PARAMETER, skip.toString());
             }
@@ -70,6 +77,10 @@ public class AnimeNewsNetworkClientImpl implements AnimeNewsNetworkClient {
     public Source queryImage(String url) {
         try {
             System.out.println("Query image: "+url);
+            if (url.startsWith(AnimeNewsNetworkClient.BASE_URL) && !baseUrl.equals(AnimeNewsNetworkClient.BASE_URL)){
+                url = url.replace(AnimeNewsNetworkClient.BASE_URL, baseUrl);
+                System.out.println("Update url to: "+url);
+            }
             Request request = new Request.Builder().url(url).build();
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
@@ -87,7 +98,7 @@ public class AnimeNewsNetworkClientImpl implements AnimeNewsNetworkClient {
     public String queryDetailsXml(Integer id, AnimeType type) {
         if (id <= 0) return null;
         try{
-            HttpUrl url = HttpUrl.parse(QUERY_DETAILS).newBuilder().addQueryParameter((type==null?QUERY_DETAILS_TITLE_PARAMETER:type.toString()),id.toString()).build();
+            HttpUrl url = HttpUrl.parse(baseUrl+QUERY_DETAILS).newBuilder().addQueryParameter((type==null?QUERY_DETAILS_TITLE_PARAMETER:type.toString()),id.toString()).build();
             System.out.println("Query details: "+url.toString());
             Request request = new Request.Builder().url(url).build();
             Response response = client.newCall(request).execute();
