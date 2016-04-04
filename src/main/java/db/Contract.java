@@ -38,8 +38,8 @@ public class Contract {
         public static final String PAGES_COLUMN = "pages";
         public static final String EPISODES_COLUMN = "episodes";
         public static final String OBJECTIONABLE_CONTENT_COLUMN = "objectionable_content";
+        public static final String PICTURE_COLUMN = "picture";
         public static final String COPYRIGHT_COLUMN = "copyright";
-
     }
 
     public static final class GenreEntry {

@@ -4,6 +4,8 @@ import xml.Anime;
 import xml.Manga;
 
 import java.sql.*;
+import java.util.Arrays;
+import java.util.List;
 
 import static db.Contract.*;
 
@@ -26,6 +28,11 @@ public class MangaDao {
     private static final String LINKS = "Official website";
     private static final String OPENING_THEME = "Opening Theme";
     private static final String ENDING_THEME = "Ending Theme";
+    private static final String PICTURE = "Picture";
+
+    private static final String[] ANIME_CREATORS_TASKS = new String[] {"Director", "Music", "Character Design", "Animation Director", "Producer", "Art Director", "Original creator", "Storyboard", "Sound Director", "Script"};
+    private static final String[] MANGA_CREATORS_TASKS = new String[] {"Story & Art", "Story", "Art"};
+
 
     private static final String OPENING_THEME_SHORTCUT = "O";
     private static final String ENDING_THEME_SHORTCUT = "E";
@@ -51,8 +58,9 @@ public class MangaDao {
             MangaEntry.PAGES_COLUMN + ", " +
             MangaEntry.EPISODES_COLUMN + ", " +
             MangaEntry.OBJECTIONABLE_CONTENT_COLUMN + ", " +
+            MangaEntry.PICTURE_COLUMN + ", " +
             MangaEntry.COPYRIGHT_COLUMN + ") " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
     private static final String SQL_INSERT_GENRE = "INSERT INTO "+ GenreEntry.TABLE_NAME + "(" +
             MangaEntry.NAME_COLUMN + ") " +
@@ -147,6 +155,7 @@ public class MangaDao {
             MangaEntry.PAGES_COLUMN + " VARCHAR, " +
             MangaEntry.EPISODES_COLUMN + " VARCHAR, " +
             MangaEntry.OBJECTIONABLE_CONTENT_COLUMN + " VARCHAR, " +
+            MangaEntry.PICTURE_COLUMN + " VARCHAR, " +
             MangaEntry.COPYRIGHT_COLUMN + " VARCHAR" + ");";
 
     private static final String SQL_CREATE_GENRES_TABLE = "CREATE TABLE IF NOT EXISTS "+GenreEntry.TABLE_NAME+" ("+
@@ -495,6 +504,7 @@ public class MangaDao {
         String pages = null;
         String episodes = null;
         String obj_cont = null;
+        String picture = null;
         String copyright = null;
         if (manga.info!=null){
             for(Manga.Info i: manga.info) {
@@ -506,6 +516,8 @@ public class MangaDao {
                     episodes = i.value;
                 }else if (OBJECTIONABLE_CONTENT.equalsIgnoreCase(i.type)) {
                     obj_cont = i.value;
+                }else if (PICTURE.equalsIgnoreCase(i.type)){
+                    picture = i.src;
                 }else if (COPYRIGHT.equalsIgnoreCase(i.type)){
                     copyright = i.value;
                 }else if (GENRES.equalsIgnoreCase(i.type)){
@@ -543,16 +555,20 @@ public class MangaDao {
                 createMangaReview(manga.id,r.text,r.href);
             }
         }
+        List<String> animeValidTasks = Arrays.asList(ANIME_CREATORS_TASKS);
+        List<String> mangaValidTasks = Arrays.asList(MANGA_CREATORS_TASKS);
         if (manga.staff!=null){
             for(Manga.Staff s: manga.staff){
-                int taskId = queryTaskId(s.task);
-                if (taskId==-1)
-                    taskId = createTask(s.task);
-                int personId = queryPersonId(s.person);
-                if (personId==-1){
-                    personId = createPerson(s.person);
+                if ((manga instanceof Anime && animeValidTasks.contains(s.task)) || (!(manga instanceof Anime) && mangaValidTasks.contains(s.task))) {
+                    int taskId = queryTaskId(s.task);
+                    if (taskId == -1)
+                        taskId = createTask(s.task);
+                    int personId = queryPersonId(s.person);
+                    if (personId == -1) {
+                        personId = createPerson(s.person);
+                    }
+                    createMangaStaff(manga.id, taskId, personId);
                 }
-                createMangaStaff(manga.id,taskId,personId);
             }
         }
         if (manga.news!=null){
@@ -593,7 +609,8 @@ public class MangaDao {
         ps.setString(8,pages);
         ps.setString(9,episodes);
         ps.setString(10,obj_cont);
-        ps.setString(11,copyright);
+        ps.setString(11,picture);
+        ps.setString(12,copyright);
         ps.executeUpdate();
         ResultSet rs = ps.getGeneratedKeys();
         int result = -1;

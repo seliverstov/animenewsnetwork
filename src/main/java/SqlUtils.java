@@ -5,7 +5,9 @@ import xml.*;
 
 import java.io.*;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -60,7 +62,7 @@ public class SQLUtils {
         imageDao.createTables();
 
         for (Titles.Item t : titles.items) {
-            if (new Integer(t.id) > maxAnnId) {
+            if (new Integer(t.id) > maxAnnId && !"magazine".equalsIgnoreCase(t.type) && !"omnibus".equalsIgnoreCase(t.type)) {
                 try {
                     String path = String.format(ITEM_FILE_PATH_TEMPLATE, t.id, t.id);
                     ANN ann = XMLUtils.parseANN(new File(path));
