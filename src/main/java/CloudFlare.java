@@ -5,9 +5,11 @@ import java.net.URL;
  * Created by a.g.seliverstov on 01.04.2016.
  */
 public class CloudFlare {
+    private static final boolean BYPASS = false;
     public static final String HOST = "cherry-pudding-87894.herokuapp.com";
 
     public static String bypass(String originUrl) {
+        if (!BYPASS) return originUrl;
         URL url = null;
         try {
             url = new URL(originUrl);
