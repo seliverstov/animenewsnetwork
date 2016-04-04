@@ -14,12 +14,9 @@ import java.util.List;
 @DatabaseTable(tableName = "manga")
 @Root
 public class Manga {
-    @DatabaseField(generatedId = true)
-    public int id;
-
     @DatabaseField
     @Attribute(name = "id")
-    public int annId;
+    public int id;
 
     @Attribute
     public long gid;
@@ -88,7 +85,7 @@ public class Manga {
 
     @Override
     public String toString() {
-        return annId+", "+type+", "+name;
+        return id+", "+type+", "+name;
     }
 
     @DatabaseTable(tableName = "related")

@@ -35,11 +35,11 @@ public class SQLUtils {
             throw new RuntimeException("Set up ANN_HOME and/or ANN_DB environment variable correctly!");
         }
         connect(ANN_DB);
-        loadImages(ANN_HOME);
+        loadaData(ANN_HOME);
         closeConnection();
     }
 
-    public static void loadImages(String basePath) throws Exception {
+    public static void loadaData(String basePath) throws Exception {
         if (!basePath.endsWith("\\")&&!basePath.endsWith("/")){
             basePath+="/";
         }

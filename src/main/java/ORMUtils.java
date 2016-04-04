@@ -43,7 +43,7 @@ public class ORMUtils {
 
         Dao<Manga, Integer> mangaDao = DaoManager.createDao(connectionSource, Manga.class);
         Manga manga = mangaDao.queryForFirst(mangaDao.queryBuilder().orderBy("annId",false).prepare());
-        if (manga!=null) maxAnnId = manga.annId;
+        if (manga!=null) maxAnnId = manga.id;
 
         System.out.println("Set max ANN id to "+maxAnnId);
 

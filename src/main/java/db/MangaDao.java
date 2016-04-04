@@ -512,21 +512,21 @@ public class MangaDao {
                     int genreId = queryGenreId(i.value);
                     if (genreId==-1)
                         genreId = createGenre(i.value);
-                    createMangaGenre(manga.annId, genreId);
+                    createMangaGenre(manga.id, genreId);
                 }else if (THEMES.equalsIgnoreCase(i.type)){
                     int themeId = queryThemeId(i.value);
                     if (themeId==-1)
                         themeId = createTheme(i.value);
-                    createMangaTheme(manga.annId, themeId);
+                    createMangaTheme(manga.id, themeId);
                 }else if (TITLES.equalsIgnoreCase(i.type)){
-                    createMangaTitle(manga.annId, i.value, i.lang);
+                    createMangaTitle(manga.id, i.value, i.lang);
                 }else if (LINKS.equalsIgnoreCase(i.type)){
                     if (i.href!=null)
-                        createMangaLink(manga.annId, (i.value!=null)?i.value:i.href, i.href, i.lang);
+                        createMangaLink(manga.id, (i.value!=null)?i.value:i.href, i.href, i.lang);
                 }else if (OPENING_THEME.equalsIgnoreCase(i.type)){
-                    createMangaMusic(manga.annId,i.value,OPENING_THEME_SHORTCUT);
+                    createMangaMusic(manga.id,i.value,OPENING_THEME_SHORTCUT);
                 }else if (ENDING_THEME.equalsIgnoreCase(i.type)){
-                    createMangaMusic(manga.annId,i.value,ENDING_THEME_SHORTCUT);
+                    createMangaMusic(manga.id,i.value,ENDING_THEME_SHORTCUT);
                 }
             }
         }
@@ -535,12 +535,12 @@ public class MangaDao {
                 int id = queryRelatedId(r.rel);
                 if (id==-1)
                     id = createRelated(r.rel);
-                createMangaRelated(manga.annId,id,r.annId);
+                createMangaRelated(manga.id,id,r.annId);
             }
         }
         if (manga.reviews!=null){
             for(Manga.Review r: manga.reviews){
-                createMangaReview(manga.annId,r.text,r.href);
+                createMangaReview(manga.id,r.text,r.href);
             }
         }
         if (manga.staff!=null){
@@ -552,12 +552,12 @@ public class MangaDao {
                 if (personId==-1){
                     personId = createPerson(s.person);
                 }
-                createMangaStaff(manga.annId,taskId,personId);
+                createMangaStaff(manga.id,taskId,personId);
             }
         }
         if (manga.news!=null){
             for(Manga.News n: manga.news){
-                createMangaNews(manga.annId,n.text,n.href, n.date);
+                createMangaNews(manga.id,n.text,n.href, n.date);
             }
         }
         if (manga instanceof Anime){
@@ -565,13 +565,13 @@ public class MangaDao {
             if (anime.episodes!=null){
                 for(Anime.Episode e: anime.episodes){
                     for(Anime.Episode.Title t: e.titles) {
-                        createMangaEpisode(anime.annId, t.title, e.num, t.part, t.lang);
+                        createMangaEpisode(anime.id, t.title, e.num, t.part, t.lang);
                     }
                 }
             }
         }
         PreparedStatement ps = connection.prepareStatement(SQL_INSERT_MANGA);
-        ps.setInt(1,manga.annId);
+        ps.setInt(1,manga.id);
         ps.setString(2,manga.type);
         ps.setString(3,manga.name);
         ps.setString(4,plot);
