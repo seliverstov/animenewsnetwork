@@ -159,14 +159,14 @@ public class DumpToFiles {
     }
 
     protected void saveToFile(File file, String content) throws IOException {
-        BufferedWriter out = new BufferedWriter(new FileWriter(file));
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"UTF-8"));
         out.write(stripNonValidXMLCharacters(content));
         out.close();
         System.out.println("File created: "+file.getName());
     }
 
     protected void appendToFile(File file,String content) throws IOException {
-        BufferedWriter out = new BufferedWriter(new FileWriter(file,true));
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true),"UTF-8"));
         out.append(content+"\n");
         out.close();
         System.out.println("Id ["+content+"] added to "+file.getName());
@@ -178,6 +178,7 @@ public class DumpToFiles {
     }
 
     public static void main(String[] args) throws IOException {
+        System.setProperty("file.encoding","UTF-8");
         DumpToFiles dumpUtil = new DumpToFiles();
 
         //dumpUtil.setListParameter(10);

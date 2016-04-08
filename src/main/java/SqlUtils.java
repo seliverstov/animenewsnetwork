@@ -50,7 +50,7 @@ public class SQLUtils {
 
         Titles titles = XMLUtils.parseTitles(new File(TITLES_FILE_PATH));
 
-        int maxAnnId = -1;
+        int maxAnnId = 18211;
 
         MangaDao mangaDao = new MangaDao(connection);
         ImageDao imageDao = new ImageDao(connection);
