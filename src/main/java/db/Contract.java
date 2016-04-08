@@ -40,13 +40,14 @@ public class Contract {
         public static final String OBJECTIONABLE_CONTENT_COLUMN = "objectionable_content";
         public static final String PICTURE_COLUMN = "picture";
         public static final String COPYRIGHT_COLUMN = "copyright";
+        public static final String VINTAGE_COLUMN = "vintage";
     }
 
     public static final class GenreEntry {
         public static final String TABLE_NAME = "genres";
 
         public static final String _ID = "_id";
-        public static final String NAME_COLUMN = "name";
+        public static final String NAME_COLUMN = "genre";
     }
 
     public static final class MangaGenreEntry {
@@ -61,7 +62,7 @@ public class Contract {
         public static final String TABLE_NAME = "themes";
 
         public static final String _ID = "_id";
-        public static final String NAME_COLUMN = "name";
+        public static final String NAME_COLUMN = "theme";
     }
 
     public static final class MangaThemeEntry {
@@ -77,7 +78,7 @@ public class Contract {
 
         public static final String _ID = "_id";
         public static final String MANGA_ID_COLUMN = "manga_id";
-        public static final String NAME_COLUMN = "name";
+        public static final String NAME_COLUMN = "title";
         public static final String LANG_COLUMN = "lang";
     }
 
@@ -86,7 +87,7 @@ public class Contract {
 
         public static final String _ID = "_id";
         public static final String MANGA_ID_COLUMN = "manga_id";
-        public static final String NAME_COLUMN = "name";
+        public static final String NAME_COLUMN = "link";
         public static final String HREF_COLUMN = "href";
         public static final String LANG_COLUMN = "lang";
     }
@@ -95,7 +96,7 @@ public class Contract {
         public static final String TABLE_NAME = "related";
 
         public static final String _ID = "_id";
-        public static final String NAME_COLUMN = "name";
+        public static final String NAME_COLUMN = "related";
     }
 
     public static final class MangaRelatedEntry {
@@ -112,7 +113,7 @@ public class Contract {
 
         public static final String _ID = "_id";
         public static final String MANGA_ID_COLUMN = "manga_id";
-        public static final String NAME_COLUMN = "name";
+        public static final String NAME_COLUMN = "episode";
         public static final String NUM_COLUMN = "num";
         public static final String PART_COLUMN = "part";
         public static final String LANG_COLUMN = "lang";
@@ -123,7 +124,7 @@ public class Contract {
 
         public static final String _ID = "_id";
         public static final String MANGA_ID_COLUMN = "manga_id";
-        public static final String NAME_COLUMN = "name";
+        public static final String NAME_COLUMN = "review";
         public static final String HREF_COLUMN = "href";
     }
 
@@ -131,14 +132,14 @@ public class Contract {
         public static final String TABLE_NAME = "persons";
 
         public static final String _ID = "_id";
-        public static final String NAME_COLUMN = "name";
+        public static final String NAME_COLUMN = "person";
     }
 
     public static final class TaskEntry {
         public static final String TABLE_NAME = "tasks";
 
         public static final String _ID = "_id";
-        public static final String NAME_COLUMN = "name";
+        public static final String NAME_COLUMN = "task";
     }
 
     public static final class MangaStaffEntry {
@@ -155,7 +156,7 @@ public class Contract {
 
         public static final String _ID = "_id";
         public static final String MANGA_ID_COLUMN = "manga_id";
-        public static final String NAME_COLUMN = "name";
+        public static final String NAME_COLUMN = "news";
         public static final String HREF_COLUMN = "href";
         public static final String DATE_COLUMN = "date";
     }
@@ -165,7 +166,7 @@ public class Contract {
 
         public static final String _ID = "_id";
         public static final String MANGA_ID_COLUMN = "manga_id";
-        public static final String NAME_COLUMN = "name";
+        public static final String NAME_COLUMN = "music";
         public static final String TYPE_COLUMN = "type";
     }
 }

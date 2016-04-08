@@ -32,6 +32,9 @@ public class Manga {
     @Attribute
     public String precision;
 
+    @DatabaseField
+    public String vintage;
+
     @Attribute(name = "generated-on")
     public String generatedOn;
 

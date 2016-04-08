@@ -71,11 +71,13 @@ public class SQLUtils {
                     Collection<Image> imagesCollection = null;
                     Manga manga = null;
                     if (ann.anime != null) {
+                        ann.anime.vintage = t.vintage;
                         mangaDao.create(ann.anime);
                         manga=ann.anime;
                         imagesCollection = images.animeImages;
                     }
                     if (ann.manga != null) {
+                        ann.manga.vintage = t.vintage;
                         mangaDao.create(ann.manga);
                         manga=ann.manga;
                         imagesCollection = images.mangaImages;

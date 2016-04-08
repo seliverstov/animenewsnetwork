@@ -59,11 +59,12 @@ public class MangaDao {
             MangaEntry.EPISODES_COLUMN + ", " +
             MangaEntry.OBJECTIONABLE_CONTENT_COLUMN + ", " +
             MangaEntry.PICTURE_COLUMN + ", " +
-            MangaEntry.COPYRIGHT_COLUMN + ") " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            MangaEntry.COPYRIGHT_COLUMN + ", " +
+            MangaEntry.VINTAGE_COLUMN + ") " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
     private static final String SQL_INSERT_GENRE = "INSERT INTO "+ GenreEntry.TABLE_NAME + "(" +
-            MangaEntry.NAME_COLUMN + ") " +
+            GenreEntry.NAME_COLUMN + ") " +
             "VALUES (?);";
 
     private static final String SQL_INSERT_MANGA_GENRE = "INSERT INTO "+ MangaGenreEntry.TABLE_NAME + "(" +
@@ -156,7 +157,8 @@ public class MangaDao {
             MangaEntry.EPISODES_COLUMN + " VARCHAR, " +
             MangaEntry.OBJECTIONABLE_CONTENT_COLUMN + " VARCHAR, " +
             MangaEntry.PICTURE_COLUMN + " VARCHAR, " +
-            MangaEntry.COPYRIGHT_COLUMN + " VARCHAR" + ");";
+            MangaEntry.COPYRIGHT_COLUMN + " VARCHAR, " +
+            MangaEntry.VINTAGE_COLUMN + " VARCHAR" + ");";
 
     private static final String SQL_CREATE_GENRES_TABLE = "CREATE TABLE IF NOT EXISTS "+GenreEntry.TABLE_NAME+" ("+
             GenreEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -590,6 +592,7 @@ public class MangaDao {
         ps.setInt(1,manga.id);
         ps.setString(2,manga.type);
         ps.setString(3,manga.name);
+        createMangaTitle(manga.id,manga.name,"EN");
         ps.setString(4,plot);
         if (manga.votes!=0) {
             ps.setInt(5, manga.votes);
@@ -611,6 +614,7 @@ public class MangaDao {
         ps.setString(10,obj_cont);
         ps.setString(11,picture);
         ps.setString(12,copyright);
+        ps.setString(13,manga.vintage);
         ps.executeUpdate();
         ResultSet rs = ps.getGeneratedKeys();
         int result = -1;
